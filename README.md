@@ -21,11 +21,18 @@ Or install it yourself as:
 
 Also do not forget to execute the initializer with:
 
-    $ rails generate initializer bpm_manager
+    $ rails generate bpm_manager:install
 
 ## Usage
 
 1. First configure properly the gem using the bpm_manager.rb file in 'config/initializers/bpm_manager.rb'
+2. Assign the Server with:
+
+    $ @server = BpmManager.new
+
+3. Make a call:
+
+    $ result = @server.get_deployments()
 
 ## Contributing
 
