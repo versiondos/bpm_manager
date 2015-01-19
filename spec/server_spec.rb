@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "BpmManager" do
   before :all do
-    BpmManager.configure({ :bpm_vendor => 'RedHat', :bpm_url => 'bpm.beatcoding.com', :bpm_username => 'Administrator', :bpm_password => 'bc-power' })
+    BpmManager.configure({ :bpm_vendor => 'RedHat', :bpm_url => 'bpm.company.com', :bpm_username => 'scott', :bpm_password => 'tiger' })
   end
   
   describe "#uri" do
@@ -53,7 +53,7 @@ describe "BpmManager" do
 
   describe "#tasks" do
     before :each do
-      @tasks = BpmManager.tasks('ariel@beatcoding.com')
+      @tasks = BpmManager.tasks('foo@bar.com')
     end
     
     it "must return something" do
@@ -63,7 +63,7 @@ describe "BpmManager" do
 
   describe "#tasks_with_opts" do
     before :each do
-      @tasks = BpmManager.tasks_with_opts({:ownerId => 'ariel@beatcoding.com', :id => 6})
+      @tasks = BpmManager.tasks_with_opts({:ownerId => 'foo@bar.com', :id => 1})
     end
     
     it "must return something" do
