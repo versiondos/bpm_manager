@@ -45,13 +45,13 @@ result = BpmManager.deployments()
 
 ## Quick Example
 
-Get all tasks for an user id
+Get all the tasks for an user id
 
 ```ruby
 BpmManager.tasks('foo@bar.com')
 ```
 
-Get all tasks for with options (RedHat example). It support all REST API options for /task/query call:
+Get all the tasks with options (RedHat example). It support all REST API options for /task/query call:
 
 ```ruby
 BpmManager.tasks({:ownerId => 'foo@bar.com', :processInstanceId => 3})
