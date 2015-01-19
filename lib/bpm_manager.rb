@@ -60,4 +60,9 @@ module BpmManager
   def self.process_instance(process_instance_id = 0)
     return JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))
   end
+
+  # Gets a Process Instance --simplified
+  def self.process_instance_simplified(process_instance_id = 0)
+    return JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))['list'][0].first[1]
+  end
 end
