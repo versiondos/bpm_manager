@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "BpmManager" do
   before :all do
-    BpmManager.configure({ :bpm_vendor => 'RedHat', :bpm_url => 'bpm.company.com', :bpm_username => 'scott', :bpm_password => 'tiger' })
+    BpmManager.configure({ :bpm_vendor => 'RedHat', :bpm_url => 'bpm.beatcoding.com', :bpm_username => 'Administrator', :bpm_password => 'bc-power' })
   end
   
   describe "#uri" do
@@ -43,7 +43,7 @@ describe "BpmManager" do
   
   describe "#deployments" do
     before :each do
-      @deployments = BpmManager.deployments()
+      @deployments = BpmManager.deployments
     end
     
     it "must return something" do

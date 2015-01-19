@@ -3,23 +3,24 @@ require "rest-client"
 require "json"
 
 module BpmManager
-  @config = {
+  @config ||= {
     :bpm_vendor => "",
     :bpm_url => "",
     :bpm_username => "",
     :bpm_password => "",
-    :bpm_use_ssl => false }
-      
+    :bpm_use_ssl => false
+  }
+  
   @valid_config_keys = @config
-
-  # Configure through hash
-  def self.configure(opts = {})
-    opts.each{ |k,v| @config[k.to_sym] = v if @valid_config_keys.include? k.to_sym }
-  end
-
+  
   # Returns the configuration hash
   def self.config
     @config
+  end
+  
+  # Configure through hash
+  def self.configure(opts = {})
+    opts.each{ |k,v| @config[k.to_sym] = v if @valid_config_keys.include? k.to_sym }
   end
 
   # Returns the URI for the server plus a suffix
