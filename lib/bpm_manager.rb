@@ -3,31 +3,34 @@ require "rest-client"
 require "json"
 
 module BpmManager
-  @config ||= {
-    :bpm_vendor => "",
-    :bpm_url => "",
-    :bpm_username => "",
-    :bpm_password => "",
-    :bpm_use_ssl => false
-  }
-  
-  @valid_config_keys = @config
-  
-  # Returns the configuration hash
-  def self.config
-    @config
-  end
-  
-  # Configure through hash
-  def self.configure(opts = {})
-    opts.each{ |k,v| @config[k.to_sym] = v if @valid_config_keys.include? k.to_sym }
+  class << self
+    attr_accessor :configuration
   end
 
+  # Defines the Configuration for the gem
+  class Configuration
+    attr_accessor :bpm_vendor, :bpm_url, :bpm_username, :bpm_password, :bpm_use_ssl
+    
+    def initialize
+      @bpm_vendor = ""
+      @bpm_url = ""
+      @bpm_username = ""
+      @bpm_password = ""
+      @bpm_use_ssl = false
+    end
+  end
+
+  # Generates a new configuration
+  def self.configure
+    self.configuration ||= Configuration.new
+    yield(configuration)
+  end
+  
   # Returns the URI for the server plus a suffix
   def self.uri(suffix = '')
-    case @config[:bpm_vendor].downcase
+    case configuration.bpm_vendor.downcase
       when 'redhat'
-        URI.encode('http' + (@config[:bpm_use_ssl] ? 's' : '') + '://' + @config[:bpm_username] + ':' + @config[:bpm_password] + '@' + @config[:bpm_url] + '/business-central/rest' + (suffix.nil? ? '' : suffix))
+        URI.encode('http' + (configuration.bpm_use_ssl ? 's' : '') + '://' + configuration.bpm_username + ':' + configuration.bpm_password + '@' + configuration.bpm_url + '/business-central/rest' + (suffix.nil? ? '' : suffix))
       else
         ''
     end

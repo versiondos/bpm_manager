@@ -2,7 +2,13 @@ require 'spec_helper'
 
 describe "BpmManager" do
   before :all do
-    BpmManager.configure({ :bpm_vendor => 'RedHat', :bpm_url => 'bpm.company.com', :bpm_username => 'scott', :bpm_password => 'tiger' })
+    BpmManager.configure do |config|
+      config.bpm_vendor = "RedHat"
+      config.bpm_url = "bpm.company.com"
+      config.bpm_username = "scott"
+      config.bpm_password = "tiger"
+      config.bpm_use_ssl = false
+    end
   end
   
   describe "#uri" do
@@ -19,25 +25,21 @@ describe "BpmManager" do
     end
   end
   
-  describe "#config" do
+  describe "#configuration" do
     before :each do
-      @config = BpmManager.config
+      @config = BpmManager.configuration
     end
     
-    it "should be a Hash" do
-      expect(@config).to be_an_instance_of Hash
+    it "should be a class of type Configuration" do
+      expect(@config).to be_an_instance_of BpmManager::Configuration
     end
     
-    it 'should not be empty' do
-      expect(@config.length).to be > 0
-    end
-    
-    it 'must have all the keys' do
-      expect(@config.has_key? :bpm_vendor).to be true
-      expect(@config.has_key? :bpm_url).to be true
-      expect(@config.has_key? :bpm_username).to be true
-      expect(@config.has_key? :bpm_password).to be true
-      expect(@config.has_key? :bpm_use_ssl).to be true
+    it 'must have all the accesors' do
+      expect(@config.methods.include? :bpm_vendor).to be true
+      expect(@config.methods.include? :bpm_url).to be true
+      expect(@config.methods.include? :bpm_username).to be true
+      expect(@config.methods.include? :bpm_password).to be true
+      expect(@config.methods.include? :bpm_use_ssl).to be true
     end
   end
   

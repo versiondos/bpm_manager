@@ -28,13 +28,13 @@ Also do not forget to execute the initializer with:
 First configure properly the gem using the bpm_manager.rb file in 'config/initializers/bpm_manager.rb' or calling
 
 ```ruby
-BpmManager.configure({
-  :bpm_vendor     => 'RedHat'             # or 'Oracle'
-  :bpm_url        => 'bpm.company.com'    # without http:// or https://
-  :bpm_username   => 'scott'
-  :bpm_passowrd   => 'tiger'
-  :bpm_use_ssl    => false                # use true for https
-})
+BpmManager.configure do |config|
+  config.bpm_vendor     => 'RedHat'           # or 'Oracle'
+  config.bpm_url        => 'bpm.company.com'  # without http:// or https://
+  config.bpm_username   => 'scott'
+  config.bpm_passowrd   => 'tiger'
+  config.bpm_use_ssl    => false              # use true for https
+end
 ```
 
 Then make an API call like this:
@@ -64,3 +64,7 @@ BpmManager.tasks({:ownerId => 'foo@bar.com', :processInstanceId => 3})
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## License
+
+RailsConfig is released under the MIT License.
