@@ -25,14 +25,23 @@ Also do not forget to execute the initializer with:
 
 ## Usage
 
-1. First configure properly the gem using the bpm_manager.rb file in 'config/initializers/bpm_manager.rb'
-2. Assign the Server with:
+1. First configure properly the gem using the bpm_manager.rb file in 'config/initializers/bpm_manager.rb' or calling
 
-    $ @server = BpmManager.new
+```ruby
+BpmManager.configure({
+  :bpm_vendor     => 'RedHat'             # or 'Oracle'
+  :bpm_url        => 'bpm.company.com'    # without http:// or https://
+  :bpm_username   => 'scott'
+  :bpm_passowrd   => 'tiger'
+  :bpm_use_ssl    => false                # use true for https
+})
+```
 
-3. Make a call:
+2. Then make an API call like this:
 
-    $ result = @server.get_deployments()
+```ruby
+result = BpmManager.deployments()
+```
 
 ## Contributing
 
