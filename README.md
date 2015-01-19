@@ -25,7 +25,7 @@ Also do not forget to execute the initializer with:
 
 ## Usage
 
-1. First configure properly the gem using the bpm_manager.rb file in 'config/initializers/bpm_manager.rb' or calling
+First configure properly the gem using the bpm_manager.rb file in 'config/initializers/bpm_manager.rb' or calling
 
 ```ruby
 BpmManager.configure({
@@ -37,10 +37,24 @@ BpmManager.configure({
 })
 ```
 
-2. Then make an API call like this:
+Then make an API call like this:
 
 ```ruby
 result = BpmManager.deployments()
+```
+
+## Quick Example
+
+Get all tasks for an user id
+
+```ruby
+BpmManager.tasks('foo@bar.com')
+```
+
+Get all tasks for with options (RedHat example). It support all REST API options for /task/query call:
+
+```ruby
+BpmManager.tasks({:ownerId => 'foo@bar.com', :processInstanceId => 3})
 ```
 
 ## Contributing

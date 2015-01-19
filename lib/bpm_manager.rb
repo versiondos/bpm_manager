@@ -24,8 +24,8 @@ module BpmManager
 
   # Returns the URI for the server plus a suffix
   def self.uri(suffix = '')
-    case @config[:bpm_vendor]
-      when 'RedHat'
+    case @config[:bpm_vendor].downcase
+      when 'redhat'
         URI.encode('http' + (@config[:bpm_use_ssl] ? 's' : '') + '://' + @config[:bpm_username] + ':' + @config[:bpm_password] + '@' + @config[:bpm_url] + '/business-central/rest' + (suffix.nil? ? '' : suffix))
       else
         ''
@@ -34,8 +34,16 @@ module BpmManager
 
   # Gets all server deployments
   def self.deployments()
-    raise LoadError 'BpmManager Gem Configuration file has errors' if @config.values.any?{|v| v.nil?}
-    
     return JSON.parse(RestClient.get(BpmManager.uri('/deployment'), :accept => :json))
+  end
+
+  # Gets all server deployments
+  def self.tasks(user_id = "")
+    return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner='+user_id)), :accept => :json))
+  end
+
+  # Gets all server deployments
+  def self.tasks_with_opts(opts = {})
+    return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| puts k.to_s + '=' + v.to_s}.join('&'))), :accept => :json))
   end
 end
