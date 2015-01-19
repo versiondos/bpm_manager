@@ -41,13 +41,23 @@ module BpmManager
     return JSON.parse(RestClient.get(BpmManager.uri('/deployment'), :accept => :json))
   end
 
-  # Gets all server deployments
+  # Gets all tasks, optionally you could specify an user id
   def self.tasks(user_id = "")
     return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)), :accept => :json))
   end
 
-  # Gets all server deployments
+  # Gets all tasks with options
   def self.tasks_with_opts(opts = {})
     return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))), :accept => :json))
+  end
+
+  # Gets all Process Instances
+  def self.process_instances
+    return JSON.parse(RestClient.get(BpmManager.uri('/history/instances'), :accept => :json))
+  end
+
+  # Gets a Process Instance
+  def self.process_instance(process_instance_id = 0)
+    return JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))
   end
 end

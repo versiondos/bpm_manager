@@ -65,11 +65,31 @@ describe "BpmManager" do
 
   describe "#tasks_with_opts" do
     before :each do
-      @tasks = BpmManager.tasks_with_opts({:ownerId => 'foo@bar.com', :id => 1})
+      @tasks = BpmManager.tasks_with_opts(:ownerId => 'foo@bar.com', :taskId => 1)
     end
     
     it "must return something" do
       expect(@tasks.length).to be > 0
+    end
+  end
+
+  describe "#process_instances" do
+    before :each do
+      @processes = BpmManager.process_instances
+    end
+    
+    it "must return something" do
+      expect(@processes.length).to be > 0
+    end
+  end
+
+  describe "#process_instance" do
+    before :each do
+      @process = BpmManager.process_instance(1)
+    end
+    
+    it "must return something" do
+      expect(@process.length).to be > 0
     end
   end
 end

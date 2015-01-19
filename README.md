@@ -43,18 +43,24 @@ Then make an API call like this:
 result = BpmManager.deployments()
 ```
 
-## Quick Example
+## Quick Examples
 
-Get all the tasks for an user id
 
 ```ruby
+# Get all the Deployments
+BpmManager.deployments
+
+# Get all the Tasks for an User ID
 BpmManager.tasks('foo@bar.com')
-```
 
-Get all the tasks with options (RedHat example). It support all REST API options for /task/query call:
-
-```ruby
+# Get all the Tasks with options (RedHat example). It supports all REST API options.
 BpmManager.tasks({:ownerId => 'foo@bar.com', :processInstanceId => 3})
+
+# Get all the Process Instances
+BpmManager.process_instances
+
+# Get the Process Instance with ID = 3
+BpmManager.process_instance(3)
 ```
 
 ## Contributing
@@ -67,4 +73,4 @@ BpmManager.tasks({:ownerId => 'foo@bar.com', :processInstanceId => 3})
 
 ## License
 
-RailsConfig is released under the MIT License.
+BpmManager is released under the MIT License.
