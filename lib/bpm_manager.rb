@@ -48,6 +48,6 @@ module BpmManager
 
   # Gets all server deployments
   def self.tasks_with_opts(opts = {})
-    return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| puts k.to_s + '=' + v.to_s}.join('&'))), :accept => :json))
+    return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))), :accept => :json))
   end
 end
