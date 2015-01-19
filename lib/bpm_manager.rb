@@ -43,7 +43,7 @@ module BpmManager
 
   # Gets all server deployments
   def self.tasks(user_id = "")
-    return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner='+user_id)), :accept => :json))
+    return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)), :accept => :json))
   end
 
   # Gets all server deployments
