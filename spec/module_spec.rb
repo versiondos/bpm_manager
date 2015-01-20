@@ -112,4 +112,34 @@ describe "BpmManager" do
       expect(@variables.length).to be > 0
     end
   end
+
+  describe "#assign_task" do
+    before :each do
+      @result = BpmManager.assign_task(1,'foo@bar.com')
+    end
+    
+    it "must return something" do
+      expect(@result.length).to be > 0
+    end
+  end
+
+  describe "#release_task" do
+    before :each do
+      @result = BpmManager.release_task(1)
+    end
+    
+    it "must return something" do
+      expect(@result.length).to be > 0
+    end
+  end
+
+  describe "#complete_task" do
+    before :each do
+      @result = BpmManager.complete_task(1)
+    end
+    
+    it "must return something" do
+      expect(@result.length).to be > 0
+    end
+  end
 end

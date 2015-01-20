@@ -70,4 +70,19 @@ module BpmManager
   def self.process_instance_variables(deployment_id = "", process_instance_id = 0)
     return JSON.parse(RestClient.get(BpmManager.uri('/runtime/' + deployment_id.to_s + '/withvars/process/instance/' + process_instance_id.to_s), :accept => :json))['variables']
   end
+  
+  # Assigns a Task for an User
+  def self.assign_task(task_id, user_id)
+    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id + '/delegate?targetEntityId=' + user_id), :headers => {:content_type => :json, :accept => :json}))
+  end
+
+  # Releases a Task
+  def self.release_task(task_id)
+    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id + '/release'), :headers => {:content_type => :json, :accept => :json}))
+  end
+
+  # Completes a Task
+  def self.complete_task(task_id)
+    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id + '/complete'), :headers => {:content_type => :json, :accept => :json}))
+  end
 end
