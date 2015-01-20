@@ -57,32 +57,32 @@ module BpmManager
   end
 
   # Gets a Process Instance
-  def self.process_instance(process_instance_id = 0)
+  def self.process_instance(process_instance_id)
     return JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))
   end
 
   # Gets a Process Instance --simplified
-  def self.process_instance_simplified(process_instance_id = 0)
+  def self.process_instance_simplified(process_instance_id)
     return JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))['list'][0].first[1]
   end
 
   # Gets a Process Instance Variables
-  def self.process_instance_variables(deployment_id = "", process_instance_id = 0)
+  def self.process_instance_variables(deployment_id, process_instance_id)
     return JSON.parse(RestClient.get(BpmManager.uri('/runtime/' + deployment_id.to_s + '/withvars/process/instance/' + process_instance_id.to_s), :accept => :json))['variables']
   end
   
   # Assigns a Task for an User
   def self.assign_task(task_id, user_id)
-    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id + '/delegate?targetEntityId=' + user_id), :headers => {:content_type => :json, :accept => :json}))
+    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/delegate?targetEntityId=' + user_id.to_s), :headers => {:content_type => :json, :accept => :json}))
   end
 
   # Releases a Task
   def self.release_task(task_id)
-    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id + '/release'), :headers => {:content_type => :json, :accept => :json}))
+    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/release'), :headers => {:content_type => :json, :accept => :json}))
   end
 
   # Completes a Task
   def self.complete_task(task_id)
-    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id + '/complete'), :headers => {:content_type => :json, :accept => :json}))
+    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete'), :headers => {:content_type => :json, :accept => :json}))
   end
 end
