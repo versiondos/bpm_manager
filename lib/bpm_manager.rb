@@ -73,16 +73,16 @@ module BpmManager
   
   # Assigns a Task for an User
   def self.assign_task(task_id, user_id)
-    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/delegate?targetEntityId=' + user_id.to_s), :headers => {:content_type => :json, :accept => :json}))
+    RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/delegate?targetEntityId=' + user_id.to_s)), :headers => {:content_type => :json, :accept => :json})
   end
 
   # Releases a Task
   def self.release_task(task_id)
-    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/release'), :headers => {:content_type => :json, :accept => :json}))
+    RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/release')), :headers => {:content_type => :json, :accept => :json})
   end
 
   # Completes a Task
   def self.complete_task(task_id)
-    return RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete'), :headers => {:content_type => :json, :accept => :json}))
+    RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete')), :headers => {:content_type => :json, :accept => :json})
   end
 end
