@@ -93,16 +93,6 @@ describe "BpmManager" do
     end
   end
 
-  describe "#process_instance_simplified" do
-    before :each do
-      @process = BpmManager.process_instance_simplified(1)
-    end
-    
-    it "must return something" do
-      expect(@process.length).to be > 0
-    end
-  end
-
   describe "#process_instance_variables" do
     before :each do
       @variables = BpmManager.process_instance_variables('package.process:1.0',1)

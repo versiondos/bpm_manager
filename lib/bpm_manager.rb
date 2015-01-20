@@ -62,11 +62,6 @@ module BpmManager
     return JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))
   end
 
-  # Gets a Process Instance --simplified
-  def self.process_instance_simplified(process_instance_id)
-    return JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))['list'][0].first[1]
-  end
-
   # Gets a Process Instance Variables
   def self.process_instance_variables(deployment_id, process_instance_id)
     return JSON.parse(RestClient.get(BpmManager.uri('/runtime/' + deployment_id.to_s + '/withvars/process/instance/' + process_instance_id.to_s), :accept => :json))['variables']
