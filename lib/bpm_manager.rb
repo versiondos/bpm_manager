@@ -27,10 +27,10 @@ module BpmManager
   end
   
   # Returns the URI for the server plus a suffix
-  def self.uri(suffix = '')
+  def self.uri(rest_service = '')
     case configuration.bpm_vendor.downcase
       when 'redhat'
-        URI.encode('http' + (configuration.bpm_use_ssl ? 's' : '') + '://' + configuration.bpm_username + ':' + configuration.bpm_password + '@' + configuration.bpm_url + '/business-central/rest' + (suffix.nil? ? '' : suffix))
+        URI.encode('http' + (configuration.bpm_use_ssl ? 's' : '') + '://' + configuration.bpm_username + ':' + configuration.bpm_password + '@' + configuration.bpm_url + configuration.bpm_url_suffix + (rest_service.nil? ? '' : rest_service))
       else
         ''
     end

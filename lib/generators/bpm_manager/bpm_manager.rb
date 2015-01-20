@@ -1,9 +1,12 @@
 BpmManager.configure do |config|
-  # Sets the BPM engine vendor [RedHat || Oracle]
+  # Sets the BPM engine vendor: [RedHat|Oracle]
   config.bpm_vendor = "RedHat"
 
-  # Sets the BPM url address without http:// or https://
+  # Sets the BPM URL or IP address without the http:// or https://
   config.bpm_url = "bpm.company.com"
+
+  # Sets the URL suffix like: '/business-central/rest' or '/jbpm-console/rest' 
+  config.bpm_url_suffix = "/jbpm-console/rest"
   
   # Sets the BPM connection username
   config.bpm_username = "scott"
