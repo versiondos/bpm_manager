@@ -58,7 +58,7 @@ module BpmManager
             my_task = OpenStruct.new
             my_task.process = OpenStruct.new
             
-            my_task.id = task['task-summary']['status']
+            my_task.id = task['task-summary']['id']
             my_task.process_instance_id = task['task-summary']['process-instance-id']
             my_task.parent_id = task['task-summary']['parent_id']
             my_task.created_on = Time.at(task['task-summary']['created-on']/1000)
