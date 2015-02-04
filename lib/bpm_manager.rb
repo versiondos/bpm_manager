@@ -1,6 +1,5 @@
 require "bpm_manager/version"
-require "rest-client"
-require "json"
+require "bpm_manager/red_hat"
 
 module BpmManager
   class << self
@@ -35,50 +34,5 @@ module BpmManager
       else
         ''
     end
-  end
-
-  # Gets all server deployments
-  def self.deployments()
-    return JSON.parse(RestClient.get(BpmManager.uri('/deployment'), :accept => :json))
-  end
-
-  # Gets all tasks, optionally you could specify an user id
-  def self.tasks(user_id = "")
-    return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)), :accept => :json))
-  end
-
-  # Gets all tasks with options
-  def self.tasks_with_opts(opts = {})
-    return JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))), :accept => :json))
-  end
-
-  # Gets all Process Instances
-  def self.process_instances
-    return JSON.parse(RestClient.get(BpmManager.uri('/history/instances'), :accept => :json))
-  end
-
-  # Gets a Process Instance
-  def self.process_instance(process_instance_id)
-    return JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))
-  end
-
-  # Gets a Process Instance Variables
-  def self.process_instance_variables(deployment_id, process_instance_id)
-    return JSON.parse(RestClient.get(BpmManager.uri('/runtime/' + deployment_id.to_s + '/withvars/process/instance/' + process_instance_id.to_s), :accept => :json))['variables']
-  end
-  
-  # Assigns a Task for an User
-  def self.assign_task(task_id, user_id)
-    RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/delegate?targetEntityId=' + user_id.to_s)), :headers => {:content_type => :json, :accept => :json})
-  end
-
-  # Releases a Task
-  def self.release_task(task_id)
-    RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/release')), :headers => {:content_type => :json, :accept => :json})
-  end
-
-  # Completes a Task
-  def self.complete_task(task_id)
-    RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete')), :headers => {:content_type => :json, :accept => :json})
   end
 end

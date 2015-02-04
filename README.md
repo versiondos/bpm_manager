@@ -1,5 +1,5 @@
 # BeatCoding BPM Manager Gem
-BPM Manager Gem for RedHat jBPM &amp; Oracle BPM engines
+BPM Manager Gem for Red Hat jBPM &amp; Oracle BPM engines
 
 Feel free to fork, contribute &amp; distribute
 
@@ -29,8 +29,7 @@ First configure properly the gem using the bpm_manager.rb file in 'config/initia
 
 ```ruby
 BpmManager.configure do |config|
-  config.bpm_vendor     => 'RedHat'                 # or 'Oracle'
-  config.bpm_url        => 'bpm.company.com'        # without http:// or https://
+  config.bpm_url        => 'bpm.server.com'         # without http:// or https://
   config.bpm_url_suffix => '/business-central/rest' # could be also /jbpm-console/rest
   config.bpm_username   => 'scott'                  # your server username
   config.bpm_passowrd   => 'tiger'                  # your password
@@ -41,28 +40,31 @@ end
 Then make an API call like this:
 
 ```ruby
-result = BpmManager.deployments()
+result = BpmManager::RedHat.deployments()
 ```
 
-## Quick Examples
-
+## Quick Examples for Red Hat
 
 ```ruby
 # Get all the Deployments
-BpmManager.deployments
+BpmManager::RedHat.deployments
 
 # Get all the Tasks for an User ID
-BpmManager.tasks('foo@bar.com')
+BpmManager::RedHat.tasks('foo@bar.com')
 
 # Get all the Tasks with options (RedHat example). It supports all REST API options.
-BpmManager.tasks({:ownerId => 'foo@bar.com', :processInstanceId => 3})
+BpmManager::RedHat.tasks({:ownerId => 'foo@bar.com', :processInstanceId => 3})
 
 # Get all the Process Instances
-BpmManager.process_instances
+BpmManager::RedHat.process_instances
 
 # Get the Process Instance with ID = 3
-BpmManager.process_instance(3)
+BpmManager::RedHat.process_instance(3)
 ```
+
+## Note
+
+Tasks and Process structures includes a :data method in which returns the JSON raw data from server
 
 ## Contributing
 
