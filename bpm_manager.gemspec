@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = BpmManager::VERSION
   spec.authors       = ["Ariel Presa"]
   spec.email         = ["arielpresa@gmail.com"]
-  spec.summary       = %q{BPM Manager Gem for RedHat jBPM & Oracle BPM engines.}
-  spec.description   = %q{Simple BPM integration with RedHat jBPM & Oracle BPM engines. Use this gem to avoid REST calls in your code. Enjoy.}
+  spec.summary       = %q{BPM Manager Gem for RedHat jBPM engine.}
+  spec.description   = %q{Simple BPM integration with RedHat jBPM engine. Use this gem to avoid REST calls in your code. Enjoy.}
   spec.homepage      = "http://www.beatcoding.com"
   spec.license       = "MIT"
 

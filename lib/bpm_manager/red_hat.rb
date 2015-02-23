@@ -31,7 +31,11 @@ module BpmManager
     
     # Gets a Process Instance Variables
     def self.process_instance_variables(deployment_id, process_instance_id)
-      JSON.parse(RestClient.get(BpmManager.uri('/runtime/' + deployment_id.to_s + '/withvars/process/instance/' + process_instance_id.to_s), :accept => :json))['variables']
+      begin
+        JSON.parse(RestClient.get(BpmManager.uri('/runtime/' + deployment_id.to_s + '/withvars/process/instance/' + process_instance_id.to_s), :accept => :json))['variables']
+      rescue
+        return nil
+      end
     end
     
     # Assigns a Task for an User
