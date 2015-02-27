@@ -1,4 +1,4 @@
-Copyright (c) 2015 Ariel Presa
+Copyright (c) 2015 Beatcoding LLC
 
 MIT License
 

@@ -1,5 +1,5 @@
 # BeatCoding BPM Manager Gem
-BPM Manager Gem for Red Hat jBPM &amp; Oracle BPM engines
+BPM Manager Gem for Red Hat jBPM
 
 Feel free to fork, contribute &amp; distribute
 
@@ -31,8 +31,8 @@ First configure properly the gem using the bpm_manager.rb file in 'config/initia
 BpmManager.configure do |config|
   config.bpm_url        => 'bpm.server.com'         # without http:// or https://
   config.bpm_url_suffix => '/business-central/rest' # could be also /jbpm-console/rest
-  config.bpm_username   => 'scott'                  # your server username
-  config.bpm_passowrd   => 'tiger'                  # your password
+  config.bpm_username   => 'foo'                    # your server username
+  config.bpm_passowrd   => 'bar'                    # your password
   config.bpm_use_ssl    => false                    # use true for https
 end
 ```
