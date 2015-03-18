@@ -1,5 +1,6 @@
 require "bpm_manager/version"
 require "bpm_manager/red_hat"
+require "bpm_manager/oracle"
 
 module BpmManager
   class << self
