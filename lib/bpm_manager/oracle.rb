@@ -87,8 +87,8 @@ module BpmManager
             my_task.id = task['number']
             my_task.process_instance_id = task['processInstanceId']
             my_task.parent_id = ''
-            my_task.created_on = Time.at(Date.parse(task['created_on']))
-            my_task.active_on = Time.at(Date.parse(task['created_on']))
+            my_task.created_on = Time.at(task['created_on'])
+            my_task.active_on = Time.at(task['created_on'])
             my_task.name = task['title']
             my_task.owner = task['assigned']
             my_task.status = task['status']
