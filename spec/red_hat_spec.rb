@@ -3,10 +3,10 @@ require 'spec_helper'
 describe BpmManager do
   before :all do
     BpmManager.configure do |config|
-      config.bpm_url = "bpm.beatcoding.com"
+      config.bpm_url = "bpm.server.com"
       config.bpm_url_suffix = "/jbpm-console/rest"
-      config.bpm_username = "Administrator"
-      config.bpm_password = "bc-power"
+      config.bpm_username = "scott"
+      config.bpm_password = "tiger"
       config.bpm_use_ssl = false
     end
   end
@@ -55,7 +55,7 @@ describe BpmManager do
   
     describe "#tasks" do
       before :each do
-        @tasks = BpmManager::RedHat.tasks('ariel@beatcoding.com')
+        @tasks = BpmManager::RedHat.tasks('foo@bar.com')
       end
       
       it "task should include the all attributes" do
@@ -143,7 +143,7 @@ describe BpmManager do
   
     describe "#assign_task" do
       before :each do
-        @result = BpmManager::RedHat.assign_task(1,'ariel@beatcoding.com')
+        @result = BpmManager::RedHat.assign_task(1,'foo@bar.com')
       end
       
       it "must return something" do
