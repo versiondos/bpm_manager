@@ -48,6 +48,11 @@ module BpmManager
       RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/start')), :headers => {:content_type => :json, :accept => :json})
     end
     
+    # Releases a Task
+    def self.release_task(task_id)
+      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/release')), :headers => {:content_type => :json, :accept => :json})
+    end
+    
     # Stops a Task
     def self.stop_task(task_id)
       RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/stop')), :headers => {:content_type => :json, :accept => :json})
@@ -61,11 +66,6 @@ module BpmManager
     # Resumes a Task
     def self.resume_task(task_id)
       RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/resumes')), :headers => {:content_type => :json, :accept => :json})
-    end
-    
-    # Releases a Task
-    def self.release_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/release')), :headers => {:content_type => :json, :accept => :json})
     end
     
     # Skips a Task
