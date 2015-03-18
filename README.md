@@ -25,7 +25,7 @@ Also do not forget to execute the initializer with:
 
 ## Usage
 
-First configure properly the gem using the bpm_manager.rb file in 'config/initializers/bpm_manager.rb' or calling
+First configure properly the gem using the bpm_manager.rb file in 'config/initializers/bpm_manager.rb' or calling:
 
 ```ruby
 BpmManager.configure do |config|
@@ -62,9 +62,20 @@ BpmManager::RedHat.process_instances
 BpmManager::RedHat.process_instance(3)
 ```
 
+## Quick Examples for Oracle
+
+```ruby
+# Get all Tasks
+BpmManager::Oracle.tasks
+
+# Get all the Tasks for an User ID
+BpmManager::Oracle.tasks('foo@bar.com')
+```
+
 ## Note
 
-Tasks and Process structures includes a :data method in which returns the JSON raw data from server
+Tasks and Process structures includes a :data method in which returns the JSON raw data from server.
+Oracle is only supported by a third-party REST API. The native API do not support all the required features.
 
 ## Contributing
 

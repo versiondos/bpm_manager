@@ -82,34 +82,34 @@ describe BpmManager do
       end      
     end
     
-    # describe "#tasks_with_opts" do
-    #   before :each do
-    #     @tasks = BpmManager::Oracle.tasks_with_opts(:processInstanceId => 1)
-    #   end
+    describe "#tasks_with_opts" do
+      before :each do
+        @tasks = BpmManager::Oracle.tasks_with_opts(:processInstanceId => 1)
+      end
       
-    #   it "task should include the all attributes" do
-    #     expect(@tasks.first.methods).to include(:id)
-    #     expect(@tasks.first.methods).to include(:process_instance_id)
-    #     expect(@tasks.first.methods).to include(:parent_id)
-    #     expect(@tasks.first.methods).to include(:created_on)
-    #     expect(@tasks.first.methods).to include(:active_on)
-    #     expect(@tasks.first.methods).to include(:name)
-    #     expect(@tasks.first.methods).to include(:owner)
-    #     expect(@tasks.first.methods).to include(:status)
-    #     expect(@tasks.first.methods).to include(:subject)
-    #     expect(@tasks.first.methods).to include(:description)
-    #     expect(@tasks.first.methods).to include(:data)
+      it "task should include the all attributes" do
+        expect(@tasks.first.methods).to include(:id)
+        expect(@tasks.first.methods).to include(:process_instance_id)
+        expect(@tasks.first.methods).to include(:parent_id)
+        expect(@tasks.first.methods).to include(:created_on)
+        expect(@tasks.first.methods).to include(:active_on)
+        expect(@tasks.first.methods).to include(:name)
+        expect(@tasks.first.methods).to include(:owner)
+        expect(@tasks.first.methods).to include(:status)
+        expect(@tasks.first.methods).to include(:subject)
+        expect(@tasks.first.methods).to include(:description)
+        expect(@tasks.first.methods).to include(:data)
         
-    #     expect(@tasks.first.process.methods).to include(:id)
-    #     expect(@tasks.first.process.methods).to include(:deployment_id)
-    #     expect(@tasks.first.process.methods).to include(:instance_id)
-    #     expect(@tasks.first.process.methods).to include(:start_on)
-    #     expect(@tasks.first.process.methods).to include(:name)
-    #     expect(@tasks.first.process.methods).to include(:version)
-    #     expect(@tasks.first.process.methods).to include(:creator)
-    #     expect(@tasks.first.process.methods).to include(:data)
-    #   end      
-    # end
+        expect(@tasks.first.process.methods).to include(:id)
+        expect(@tasks.first.process.methods).to include(:deployment_id)
+        expect(@tasks.first.process.methods).to include(:instance_id)
+        expect(@tasks.first.process.methods).to include(:start_on)
+        expect(@tasks.first.process.methods).to include(:name)
+        expect(@tasks.first.process.methods).to include(:version)
+        expect(@tasks.first.process.methods).to include(:creator)
+        expect(@tasks.first.process.methods).to include(:data)
+      end      
+    end
   
     # describe "#process_instances" do
     #   before :each do
@@ -141,21 +141,21 @@ describe BpmManager do
     #   end
     # end
   
-    # describe "#assign_task" do
-    #   before :each do
-    #     @result = BpmManager::Oracle.assign_task(1,'foo@bar.com')
-    #   end
+    describe "#assign_task" do
+      before :each do
+        @result = BpmManager::Oracle.assign_task(1,'ariel@beatcoding.com')
+      end
       
-    #   it "must return something" do
-    #     expect(@result.length).to be > 0
-    #   end
-    # end
+      it "must return something" do
+        expect(@result.length).to be > 0
+      end
+    end
   
     # describe "#release_task" do
     #   before :each do
     #     @result = BpmManager::Oracle.release_task(1)
     #   end
-      
+    
     #   it "must return something" do
     #     expect(@result.length).to be > 0
     #   end
@@ -165,7 +165,7 @@ describe BpmManager do
     #   before :each do
     #     @result = BpmManager::Oracle.complete_task(1)
     #   end
-      
+    
     #   it "must return something" do
     #     expect(@result.length).to be > 0
     #   end

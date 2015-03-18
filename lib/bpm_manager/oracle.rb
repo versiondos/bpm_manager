@@ -4,11 +4,6 @@ require "ostruct"
 
 module BpmManager
   module Oracle
-    # Gets all server deployments
-    # def self.deployments()
-    #   return JSON.parse(RestClient.get(BpmManager.uri('/deployment'), :accept => :json))
-    # end
-    
     # Gets all tasks, optionally you could specify an user id
     def self.tasks(user_id = "")
       self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/tasks' + (user_id.empty? ? '' : '/' + user_id)), :accept => :json)))
@@ -29,19 +24,10 @@ module BpmManager
       JSON.parse(RestClient.get(BpmManager.uri('/process/' + process_instance_id.to_s), :accept => :json))
     end
     
-    # Gets a Process Instance Variables
-    # def self.process_instance_variables(deployment_id, process_instance_id)
-    #   begin
-    #     JSON.parse(RestClient.get(BpmManager.uri('/runtime/' + deployment_id.to_s + '/withvars/process/instance/' + process_instance_id.to_s), :accept => :json))['variables']
-    #   rescue
-    #     return nil
-    #   end
-    # end
-    
     # Assigns a Task for an User
-    # def self.assign_task(task_id, user_id)
-    #   RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/delegate?targetEntityId=' + user_id.to_s)), :headers => {:content_type => :json, :accept => :json})
-    # end
+    def self.assign_task(task_id, user_id)
+      RestClient.post(URI.encode(BpmManager.uri('/task/assign/' + task_id.to_s + '/' + user_id.to_s)), :headers => {:content_type => :json, :accept => :json})
+    end
     
     # Starts a Task
     # def self.start_task(task_id)
@@ -64,9 +50,9 @@ module BpmManager
     # end
     
     # Releases a Task
-    # def self.release_task(task_id)
-    #   RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/release')), :headers => {:content_type => :json, :accept => :json})
-    # end
+    def self.release_task(task_id)
+      RestClient.post(URI.encode(BpmManager.uri('/task/release/' + task_id.to_s)), :headers => {:content_type => :json, :accept => :json})
+    end
     
     # Skips a Task
     # def self.skip_task(task_id)
@@ -98,7 +84,7 @@ module BpmManager
             my_task.process = OpenStruct.new
             process_info = (task['processInfo'].nil? || task['processInfo'].empty?) ? '' : JSON.parse(task['processInfo']).first
             
-            my_task.id = task['number']
+            my_task.id = task['id']
             my_task.process_instance_id = task['processInstanceId']
             my_task.parent_id = ''
             my_task.created_on = Date.parse(task['created_on'])
