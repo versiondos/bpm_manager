@@ -40,18 +40,18 @@ module BpmManager
     # end
     
     # Suspends a Task
-    # def self.suspend_task(task_id)
-    #   RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/suspend')), :headers => {:content_type => :json, :accept => :json})
-    # end
+    def self.suspend_task(task_id)
+      RestClient.post(URI.encode(BpmManager.uri('/task/action/' + task_id.to_s + '/SYS_SUSPEND')), :headers => {:content_type => :json, :accept => :json})
+    end
     
     # Resumes a Task
-    # def self.resume_task(task_id)
-    #   RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/resumes')), :headers => {:content_type => :json, :accept => :json})
-    # end
+    def self.resume_task(task_id)
+      RestClient.post(URI.encode(BpmManager.uri('/task/action' + task_id.to_s + '/SYS_RESUME')), :headers => {:content_type => :json, :accept => :json})
+    end
     
     # Releases a Task
     def self.release_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/release/' + task_id.to_s)), :headers => {:content_type => :json, :accept => :json})
+      RestClient.post(URI.encode(BpmManager.uri('/task/action/' + task_id.to_s + '/SYS_RELEASE')), :headers => {:content_type => :json, :accept => :json})
     end
     
     # Skips a Task
@@ -65,9 +65,9 @@ module BpmManager
     # end
     
     # Fails a Task
-    # def self.fail_task(task_id)
-    #   RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/fail')), :headers => {:content_type => :json, :accept => :json})
-    # end
+    def self.fail_task(task_id)
+      RestClient.post(URI.encode(BpmManager.uri('/task/action/' + task_id.to_s + '/SYS_ERROR')), :headers => {:content_type => :json, :accept => :json})
+    end
     
     # Exits a Task
     # def self.exit_task(task_id)
@@ -87,8 +87,8 @@ module BpmManager
             my_task.id = task['number']
             my_task.process_instance_id = task['processInstanceId']
             my_task.parent_id = ''
-            my_task.created_on = Date.parse(task['created_on'])
-            my_task.active_on = Date.parse(task['created_on'])
+            my_task.created_on = Time.at(Date.parse(task['created_on']))
+            my_task.active_on = Time.at(Date.parse(task['created_on']))
             my_task.name = task['title']
             my_task.owner = task['assigned']
             my_task.status = task['status']
