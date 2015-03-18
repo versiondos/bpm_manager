@@ -90,7 +90,7 @@ module BpmManager
             my_task.created_on = Time.parse(task['created_on'])
             my_task.active_on = Time.parse(task['created_on'])
             my_task.name = task['title']
-            my_task.owner = task['assigned']
+            my_task.owner = task['owner']
             my_task.status = task['status']
             my_task.subject = ''
             my_task.description = ''
@@ -104,7 +104,7 @@ module BpmManager
             my_task.process.start_on = Time.parse(task['created_on'])
             my_task.process.name = task['processName']
             my_task.process.version = (process_info.nil? || process_info.empty?) ? '' : process_info['revision']
-            my_task.process.creator = 'Not defined'
+            my_task.process.creator = task['creatorName']
             my_task.process.variables = nil # self.process_instance_variables(my_task.process.deployment_id, my_task.process.instance_id)
             tasks << my_task
           end
