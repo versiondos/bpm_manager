@@ -143,7 +143,7 @@ describe BpmManager do
   
     describe "#assign_task" do
       before :each do
-        @result = BpmManager::Oracle.assign_task(1,'ariel@beatcoding.com')
+        @result = BpmManager::Oracle.assign_task(200307,'ariel@beatcoding.com')
       end
       
       it "must return something" do
@@ -151,15 +151,15 @@ describe BpmManager do
       end
     end
   
-    # describe "#release_task" do
-    #   before :each do
-    #     @result = BpmManager::Oracle.release_task(1)
-    #   end
+    describe "#release_task" do
+      before :each do
+        @result = BpmManager::Oracle.release_task(200307)
+      end
     
-    #   it "must return something" do
-    #     expect(@result.length).to be > 0
-    #   end
-    # end
+      it "must return something" do
+        expect(@result.length).to be > 0
+      end
+    end
     
     # describe "#complete_task" do
     #   before :each do

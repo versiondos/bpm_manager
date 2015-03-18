@@ -84,7 +84,7 @@ module BpmManager
             my_task.process = OpenStruct.new
             process_info = (task['processInfo'].nil? || task['processInfo'].empty?) ? '' : JSON.parse(task['processInfo']).first
             
-            my_task.id = task['id']
+            my_task.id = task['number']
             my_task.process_instance_id = task['processInstanceId']
             my_task.parent_id = ''
             my_task.created_on = Date.parse(task['created_on'])
