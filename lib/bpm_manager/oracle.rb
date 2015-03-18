@@ -87,8 +87,8 @@ module BpmManager
             my_task.id = task['number']
             my_task.process_instance_id = task['processInstanceId']
             my_task.parent_id = ''
-            my_task.created_on = DateTime.parse(task['created_on']).strftime('%Q')
-            my_task.active_on = DateTime.parse(task['created_on']).strftime('%Q')
+            my_task.created_on = Time.parse(task['created_on'])
+            my_task.active_on = Time.parse(task['created_on'])
             my_task.name = task['title']
             my_task.owner = task['assigned']
             my_task.status = task['status']
@@ -101,7 +101,7 @@ module BpmManager
             my_task.process.id = (process_info.nil? || process_info.empty?) ? '' : process_info['processId']
             
             my_task.process.instance_id = task['processInstanceId']
-            my_task.process.start_on = Date.parse(task['created_on']).strftime('%Q')
+            my_task.process.start_on = Time.parse(task['created_on'])
             my_task.process.name = task['processName']
             my_task.process.version = (process_info.nil? || process_info.empty?) ? '' : process_info['revision']
             my_task.process.creator = 'Not defined'
