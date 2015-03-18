@@ -96,7 +96,7 @@ module BpmManager
           input.each do |task|
             my_task = OpenStruct.new
             my_task.process = OpenStruct.new
-            process_info = task['processInfo'].empty? ? '' : JSON.parse(task['processInfo']).first
+            process_info = (task['processInfo'].nil? || task['processInfo'].empty?) ? '' : JSON.parse(task['processInfo']).first
             
             my_task.id = task['number']
             my_task.process_instance_id = task['processInstanceId']
@@ -108,16 +108,16 @@ module BpmManager
             my_task.status = task['status']
             my_task.subject = ''
             my_task.description = ''
-            my_task.data = process_info
+            my_task.data = ''
             
             my_task.process.data = process_info
             my_task.process.deployment_id = ''
-            my_task.process.id = process_info.empty? ? '' : process_info['processId']
+            my_task.process.id = (process_info.nil? || process_info.empty?) ? '' : process_info['processId']
             
             my_task.process.instance_id = task['processInstanceId']
             my_task.process.start_on = Date.parse(task['created_on'])
             my_task.process.name = task['processName']
-            my_task.process.version = process_info.empty? ? '' : process_info['revision']
+            my_task.process.version = (process_info.nil? || process_info.empty?) ? '' : process_info['revision']
             my_task.process.creator = 'Not defined'
             my_task.process.variables = '' # self.process_instance_variables(my_task.process.deployment_id, my_task.process.instance_id)
             tasks << my_task
