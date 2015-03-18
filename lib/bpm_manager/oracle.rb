@@ -96,7 +96,7 @@ module BpmManager
           input.each do |task|
             my_task = OpenStruct.new
             my_task.process = OpenStruct.new
-            process_info = task['processInfo']
+            process_info = task['processInfo'].nil? ? '' : JSON.parse(task['processInfo'].data)
             
             my_task.id = task['number']
             my_task.process_instance_id = task['processInstanceId']
@@ -112,7 +112,7 @@ module BpmManager
             
             my_task.process.data = ''
             my_task.process.deployment_id = ''
-            my_task.process.id = task['processId']
+            my_task.process.id = process_info['processId']
             
             my_task.process.instance_id = task['processInstanceId']
             my_task.process.start_on = Date.parse(task['created_on'])
