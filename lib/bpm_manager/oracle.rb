@@ -15,9 +15,9 @@ module BpmManager
     end
     
     # Gets all tasks with options
-    # def self.tasks_with_opts(opts = {})
-    #   self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))), :accept => :json)))
-    # end
+    def self.tasks_with_opts(opts = {})
+      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/tasks' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))), :accept => :json)))
+    end
     
     # Gets all Process Instances
     def self.process_instances
