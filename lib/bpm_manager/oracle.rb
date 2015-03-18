@@ -92,19 +92,17 @@ module BpmManager
       def self.structure_task_data(input)
         tasks = []
         
-        logger.debug '-------> ' + input.inspect
-        
         unless input.nil?
           input.each do |task|
             my_task = OpenStruct.new
             my_task.process = OpenStruct.new
-            process_info = task['processInfo'].to_h
+            process_info = task['processInfo']
             
             my_task.id = task['number']
-            my_task.process_instance_id = task['task-summary']['process-instance-id']
-            my_task.parent_id = task['task-summary']['parent_id']
-            my_task.created_on = Time.at(task['created-on'])
-            my_task.active_on = Time.at(task['created-on'])
+            my_task.process_instance_id = task['processInstanceId']
+            my_task.parent_id = ''
+            my_task.created_on = Date.parse(task['created_on'])
+            my_task.active_on = Date.parse(task['created_on'])
             my_task.name = task['title']
             my_task.owner = task['assigned']
             my_task.status = task['status']
@@ -117,7 +115,7 @@ module BpmManager
             my_task.process.id = task['processId']
             
             my_task.process.instance_id = task['processInstanceId']
-            my_task.process.start_on = Time.at(task['created-on'])
+            my_task.process.start_on = Date.parse(task['created_on'])
             my_task.process.name = task['processName']
             my_task.process.version = process_info['revision']
             my_task.process.creator = 'Not defined'

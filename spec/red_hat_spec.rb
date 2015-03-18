@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'ruby-debug'
 
 describe BpmManager do
   before :all do

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'ruby-debug'
 
 describe BpmManager do
   before :all do
@@ -60,26 +59,26 @@ describe BpmManager do
       end
       
       it "task should include the all attributes" do
-        # expect(@tasks.first.methods).to include(:id)
+        expect(@tasks.first.methods).to include(:id)
         expect(@tasks.first.methods).to include(:process_instance_id)
-        # expect(@tasks.first.methods).to include(:parent_id)
-        # expect(@tasks.first.methods).to include(:created_on)
-        # expect(@tasks.first.methods).to include(:active_on)
-        # expect(@tasks.first.methods).to include(:name)
-        # expect(@tasks.first.methods).to include(:owner)
-        # expect(@tasks.first.methods).to include(:status)
-        # expect(@tasks.first.methods).to include(:subject)
-        # expect(@tasks.first.methods).to include(:description)
-        # expect(@tasks.first.methods).to include(:data)
+        expect(@tasks.first.methods).to include(:parent_id)
+        expect(@tasks.first.methods).to include(:created_on)
+        expect(@tasks.first.methods).to include(:active_on)
+        expect(@tasks.first.methods).to include(:name)
+        expect(@tasks.first.methods).to include(:owner)
+        expect(@tasks.first.methods).to include(:status)
+        expect(@tasks.first.methods).to include(:subject)
+        expect(@tasks.first.methods).to include(:description)
+        expect(@tasks.first.methods).to include(:data)
         
-        # expect(@tasks.first.process.methods).to include(:id)
-        # expect(@tasks.first.process.methods).to include(:deployment_id)
-        # expect(@tasks.first.process.methods).to include(:instance_id)
-        # expect(@tasks.first.process.methods).to include(:start_on)
-        # expect(@tasks.first.process.methods).to include(:name)
-        # expect(@tasks.first.process.methods).to include(:version)
-        # expect(@tasks.first.process.methods).to include(:creator)
-        # expect(@tasks.first.process.methods).to include(:data)
+        expect(@tasks.first.process.methods).to include(:id)
+        expect(@tasks.first.process.methods).to include(:deployment_id)
+        expect(@tasks.first.process.methods).to include(:instance_id)
+        expect(@tasks.first.process.methods).to include(:start_on)
+        expect(@tasks.first.process.methods).to include(:name)
+        expect(@tasks.first.process.methods).to include(:version)
+        expect(@tasks.first.process.methods).to include(:creator)
+        expect(@tasks.first.process.methods).to include(:data)
       end      
     end
     
