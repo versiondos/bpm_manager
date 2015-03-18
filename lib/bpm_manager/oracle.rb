@@ -119,7 +119,7 @@ module BpmManager
             my_task.process.name = task['processName']
             my_task.process.version = (process_info.nil? || process_info.empty?) ? '' : process_info['revision']
             my_task.process.creator = 'Not defined'
-            my_task.process.variables = [] # self.process_instance_variables(my_task.process.deployment_id, my_task.process.instance_id)
+            my_task.process.variables = nil # self.process_instance_variables(my_task.process.deployment_id, my_task.process.instance_id)
             tasks << my_task
           end
         end
