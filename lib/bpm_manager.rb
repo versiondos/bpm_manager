@@ -8,10 +8,9 @@ module BpmManager
 
   # Defines the Configuration for the gem
   class Configuration
-    attr_accessor :bpm_vendor, :bpm_url, :bpm_url_suffix, :bpm_username, :bpm_password, :bpm_use_ssl
+    attr_accessor :bpm_url, :bpm_url_suffix, :bpm_username, :bpm_password, :bpm_use_ssl
     
     def initialize
-      @bpm_vendor = ""
       @bpm_url = ""
       @bpm_url_suffix = ""
       @bpm_username = ""

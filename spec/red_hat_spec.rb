@@ -1,12 +1,13 @@
 require 'spec_helper'
+require 'ruby-debug'
 
 describe BpmManager do
   before :all do
     BpmManager.configure do |config|
-      config.bpm_url = "bpm.server.com"
+      config.bpm_url = "bpm.beatcoding.com"
       config.bpm_url_suffix = "/jbpm-console/rest"
-      config.bpm_username = "scott"
-      config.bpm_password = "tiger"
+      config.bpm_username = "Administrator"
+      config.bpm_password = "bc-power"
       config.bpm_use_ssl = false
     end
   end
@@ -35,7 +36,6 @@ describe BpmManager do
     end
     
     it 'must have all the accesors' do
-      expect(@config.methods.include? :bpm_vendor).to be true
       expect(@config.methods.include? :bpm_url).to be true
       expect(@config.methods.include? :bpm_username).to be true
       expect(@config.methods.include? :bpm_password).to be true
@@ -56,7 +56,7 @@ describe BpmManager do
   
     describe "#tasks" do
       before :each do
-        @tasks = BpmManager::RedHat.tasks('foo@bar.com')
+        @tasks = BpmManager::RedHat.tasks('ariel@beatcoding.com')
       end
       
       it "task should include the all attributes" do
@@ -138,13 +138,13 @@ describe BpmManager do
       end
       
       it "must return something" do
-        expect(@variables.length).to be > 0
+        expect(@variables.length).to be > 0 unless @variables.nil?
       end
     end
   
     describe "#assign_task" do
       before :each do
-        @result = BpmManager::RedHat.assign_task(1,'foo@bar.com')
+        @result = BpmManager::RedHat.assign_task(1,'ariel@beatcoding.com')
       end
       
       it "must return something" do
