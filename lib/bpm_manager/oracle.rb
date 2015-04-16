@@ -78,7 +78,7 @@ module BpmManager
       def self.structure_task_data(input)
         tasks = []
         
-        unless input.nil?
+        unless input.nil? || input.empty?
           input.each do |task|
             my_task = OpenStruct.new
             my_task.process = OpenStruct.new
