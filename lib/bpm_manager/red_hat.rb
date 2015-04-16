@@ -11,7 +11,7 @@ module BpmManager
     
     # Gets all tasks, optionally you could specify an user id
     def self.tasks(user_id = "")
-      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?&status=Created&status=Ready&status=Reserved&status=InProgress&taskOwner=' + user_id)), :accept => :json)))
+      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)), :accept => :json)))
     end
     
     # Gets all tasks with options
