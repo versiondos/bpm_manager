@@ -119,8 +119,8 @@ module BpmManager
             my_task.created_on = Time.at(task['task-summary']['created-on']/1000)
             my_task.active_on = Time.at(task['task-summary']['activation-time']/1000)
             my_task.name = task['task-summary']['name']
-            my_task.form_name = self.task_query(my_task.id)['form-name']
-            my_task.creator = self.task_query(my_task.id)['taskData']['created-by']
+            my_task.form_name = self.task_query(my_task.id.to_s)['form-name']
+            my_task.creator = self.task_query(my_task.id.to_s)['taskData']['created-by']
             my_task.owner = task['task-summary']['actual-owner']
             my_task.status = task['task-summary']['status']
             my_task.subject = task['task-summary']['subject']
