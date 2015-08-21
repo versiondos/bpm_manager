@@ -47,6 +47,11 @@ module BpmManager
     def self.assign_task(task_id, user_id)
       RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/delegate?targetEntityId=' + user_id.to_s)), :headers => {:content_type => :json, :accept => :json})
     end
+
+    # Gets all the information for a Task ID
+    def self.task_query(task_id = "")
+      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/' + task_id.to_s), :accept => :json)))
+    end
     
     # Starts a Task
     def self.start_task(task_id)
@@ -114,7 +119,8 @@ module BpmManager
             my_task.created_on = Time.at(task['task-summary']['created-on']/1000)
             my_task.active_on = Time.at(task['task-summary']['activation-time']/1000)
             my_task.name = task['task-summary']['name']
-            my_task.form_name = task['task-summary']['formname']
+            my_task.form_name = self.task_query(my_task.id)['form-name']
+            my_task.creator = self.task_query(my_task.id)['taskData']['created-by']
             my_task.owner = task['task-summary']['actual-owner']
             my_task.status = task['task-summary']['status']
             my_task.subject = task['task-summary']['subject']
