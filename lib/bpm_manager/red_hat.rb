@@ -9,14 +9,9 @@ module BpmManager
       return JSON.parse(RestClient.get(BpmManager.uri('/deployment'), :accept => :json))
     end
     
-    # Gets all tasks, optionally you could specify an user id
-    def self.tasks(user_id = "")
-      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)), :accept => :json)))
-    end
-    
-    # Gets all tasks with options
-    def self.tasks_with_opts(opts = {})
-      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))), :accept => :json)))
+    # Creates a new Process
+    def self.create_process(deployment_id, process_definition_id, opts = {})
+      RestClient.post(URI.encode(BpmManager.uri('/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&')))), :headers => {:content_type => :json, :accept => :json})
     end
     
     # Gets all Process Instances
@@ -36,6 +31,16 @@ module BpmManager
       rescue
         return nil
       end
+    end
+    
+    # Gets all tasks, optionally you could specify an user id
+    def self.tasks(user_id = "")
+      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)), :accept => :json)))
+    end
+    
+    # Gets all tasks with options
+    def self.tasks_with_opts(opts = {})
+      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))), :accept => :json)))
     end
     
     # Assigns a Task for an User
@@ -75,7 +80,14 @@ module BpmManager
     
     # Completes a Task
     def self.complete_task(task_id, opts = {})
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete')), :headers => {:content_type => :json, :accept => :json})
+      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&')))), :headers => {:content_type => :json, :accept => :json})
+    end
+    
+    # Completes a Task as Administrator
+    def self.complete_task_as_admin(task_id, opts = {})
+      self.assign_task(task_id, 'Administrator')
+      self.start_task(task_id)
+      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&')))), :headers => {:content_type => :json, :accept => :json})
     end
     
     # Fails a Task
