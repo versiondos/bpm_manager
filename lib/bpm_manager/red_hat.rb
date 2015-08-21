@@ -49,7 +49,7 @@ module BpmManager
     end
 
     # Gets all the information for a Task ID
-    def self.task_query(task_id = "")
+    def self.task_query(task_id)
       self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/' + task_id.to_s), :accept => :json)))
     end
     
@@ -119,8 +119,8 @@ module BpmManager
             my_task.created_on = Time.at(task['task-summary']['created-on']/1000)
             my_task.active_on = Time.at(task['task-summary']['activation-time']/1000)
             my_task.name = task['task-summary']['name']
-            my_task.form_name = self.task_query(my_task.id.to_s)['form-name']
-            my_task.creator = self.task_query(my_task.id.to_s)['taskData']['created-by']
+            my_task.form_name = self.task_query(task['task-summary']['id'])['form-name']
+            my_task.creator = self.task_query(task['task-summary']['id'])['taskData']['created-by']
             my_task.owner = task['task-summary']['actual-owner']
             my_task.status = task['task-summary']['status']
             my_task.subject = task['task-summary']['subject']
