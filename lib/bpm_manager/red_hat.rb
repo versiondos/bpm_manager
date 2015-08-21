@@ -85,7 +85,7 @@ module BpmManager
     
     # Completes a Task as Administrator
     def self.complete_task_as_admin(task_id, opts = {})
-      self.assign_task(task_id, 'Administrator')
+      self.release_task(task_id)
       self.start_task(task_id)
       RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&')))), :headers => {:content_type => :json, :accept => :json})
     end
@@ -114,6 +114,7 @@ module BpmManager
             my_task.created_on = Time.at(task['task-summary']['created-on']/1000)
             my_task.active_on = Time.at(task['task-summary']['activation-time']/1000)
             my_task.name = task['task-summary']['name']
+            my_task.form_name = task['task-summary']['formname']
             my_task.owner = task['task-summary']['actual-owner']
             my_task.status = task['task-summary']['status']
             my_task.subject = task['task-summary']['subject']
