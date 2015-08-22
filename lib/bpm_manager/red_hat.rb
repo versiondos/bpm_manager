@@ -50,7 +50,7 @@ module BpmManager
 
     # Gets all the information for a Task ID
     def self.task_query(task_id)
-      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/' + task_id.to_s), :accept => :json)))
+      JSON.parse(RestClient.get(BpmManager.uri('/task/' + task_id.to_s), :accept => :json))
     end
     
     # Starts a Task
