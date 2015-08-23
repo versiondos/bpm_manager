@@ -105,6 +105,14 @@ module BpmManager
       RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/exit')), :headers => {:content_type => :json, :accept => :json})
     end
     
+    def self.get_history(process_definition_id = "")
+      if process_definition_id.empty?
+        JSON.parse(RestClient.get(BpmManager.uri('/history/instances'), :accept => :json))
+      else
+        JSON.parse(RestClient.get(BpmManager.uri('/history/process/' + process_definition_id.to_s), :accept => :json))
+      end
+    end
+    
     private
       def self.structure_task_data(input)
         tasks = []
