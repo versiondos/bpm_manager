@@ -25,9 +25,9 @@ module BpmManager
     end
     
     # Gets a Process Instance Variables
-    def self.process_instance_variables(deployment_id, process_instance_id)
+    def self.process_instance_variables(process_instance_id)
       begin
-        JSON.parse(RestClient.get(BpmManager.uri('/runtime/' + deployment_id.to_s + '/withvars/process/instance/' + process_instance_id.to_s), :accept => :json))['variables']
+        JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s + '/variable'), :accept => :json))['historyLogList'].map{|e| {e['variable-instance-log']['variable-id'] => e['variable-instance-log']['value']}}
       rescue
         return nil
       end
@@ -105,6 +105,7 @@ module BpmManager
       RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/exit')), :headers => {:content_type => :json, :accept => :json})
     end
     
+    # Gets the Process History
     def self.get_history(process_definition_id = "")
       if process_definition_id.empty?
         JSON.parse(RestClient.get(BpmManager.uri('/history/instances'), :accept => :json))
