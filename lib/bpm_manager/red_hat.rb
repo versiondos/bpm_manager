@@ -27,9 +27,12 @@ module BpmManager
     # Gets a Process Instance Variables
     def self.process_instance_variables(process_instance_id)
       begin
-        JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s + '/variable'), :accept => :json))['historyLogList'].map{|e| {e['variable-instance-log']['variable-id'] => e['variable-instance-log']['value']}}
+        result = Hash.new
+        JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s + '/variable'), :accept => :json))['historyLogList'].each{|e| result[e['variable-instance-log']['variable-id']] = e['variable-instance-log']['value']}
+        
+        return result
       rescue
-        return nil
+        return {}
       end
     end
     
