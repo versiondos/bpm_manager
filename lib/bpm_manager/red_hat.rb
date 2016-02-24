@@ -122,6 +122,29 @@ module BpmManager
       RestClient.post(URI.encode(BpmManager.uri('/history/clear')), :headers => {:content_type => :json, :accept => :json})
     end
     
+    # Gets the SLA for a Process Instance
+    def self.get_task_sla(task_instance_id, process_sla_hours = 0, task_sla_hours = 0, warning_offset_percent = 20)
+      sla = OpenStruct.new
+      sla.task = OpenStruct.new
+      sla.process = OpenStruct.new
+      my_task = self.tasks_with_opts(:taskId => task_instance_id).first
+      
+      unless my_task.nil?
+      else
+        # Calculates the process sla
+        sla.process.status = calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent)
+        sla.process.status_name = (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
+        sla.process.percent = calculate_sla_percent(my_task.process.start_on, process_sla_hours, warning_offset_percent)
+        
+        # Calculates the task sla
+        sla.task.status = calculate_sla(my_task.task.created_on, task_sla_hours, warning_offset_percent)
+        sla.task.status_name = (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
+        sla.task.percent = calculate_sla_percent(my_task.created_on, task_sla_hours, warning_offset_percent)
+      end
+      
+      return sla
+    end
+    
     private
       def self.structure_task_data(input)
         tasks = []
@@ -157,6 +180,25 @@ module BpmManager
         end
         
         return tasks
+      end
+      
+      def calculate_sla(start, sla_hours=0, offset=20)
+        unless sla_hours > 0
+          (start.to_f + ((sla_hours.to_f * 7*24*60*60))*((100-offset)/100)) <= Time.now.utc.to_f ? 0 : ((start.to_f + (sla_hours.to_f * 7*24*60*60) <= Time.now.utc.to_f) ? 1 : 2)
+        else
+          0
+        end
+      end
+      
+      def calculate_sla_percent(start, sla_hours=0, offset=20)
+        percent = OpenStruct.new
+        total = Time.now.utf.to_f - start.to_f
+        
+        percent.green = sla_hours > 0 ? (start.to_f + ((sla_hours.to_f * 7*24*60*60)) * ((100-offset)/100)) / total * 100 : 100
+        percent.yellow = sla_hours > 0 ? (start.to_f + ((sla_hours.to_f * 7*24*60*60)) / total * 100) - green : 0
+        percent.red = sla_hours > 0 ? 100 - yellow - green : 0
+        
+        return percent
       end
   end
 end
