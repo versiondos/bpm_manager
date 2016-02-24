@@ -128,7 +128,7 @@ module BpmManager
       
       unless my_task.nil?
         sla = OpenStruct.new(:task => OpenStruct.new, :process => OpenStruct.new)
-
+        
         # Calculates the process sla
         sla.process.status = calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent)
         sla.process.status_name = (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
@@ -148,14 +148,14 @@ module BpmManager
     # Private class methods
     def self.calculate_sla(start, sla_hours = 0.0, offset = 20)
       sla_hours = sla_hours.to_f * 3600   # converts to seconds
-      sla_hours > 0 ? Time.at((start.utc + sla_hours).to_f * ((100 - offset) / 100)) <= Time.now.utc ? 0 : (start.utc + sla_hours <= Time.now.utc ? 1 : 2) : 0
+      sla_hours > 0 ? Time.at((start.utc + sla_hours).to_f * ((100 - offset) / 100)) >= Time.now.utc ? 0 : (start.utc + sla_hours >= Time.now.utc ? 1 : 2) : 0
     end
     private_class_method :calculate_sla
     
     def self.calculate_sla_percent(start, sla_hours=0, offset=20)
       sla_hours = sla_hours.to_f * 3600   # converts to seconds
       percent = OpenStruct.new
-      total = Time.now.utc - start.utc
+      total = (Time.now.utc - start.utc).to_f
       
       percent.green  = sla_hours > 0 ? ((start.utc + sla_hours).to_f * (100 - offset) / 100) * 100 / total : 100
       percent.yellow = sla_hours > 0 ? ((start.utc + sla_hours).to_f * 100 / total) - percent.green : 0
