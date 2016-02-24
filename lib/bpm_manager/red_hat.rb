@@ -117,6 +117,11 @@ module BpmManager
       end
     end
     
+    # Clears all the History --WARNING: Destructive action!--
+    def self.clear_all_history()
+      RestClient.post(URI.encode(BpmManager.uri('/history/clear')), :headers => {:content_type => :json, :accept => :json})
+    end
+    
     private
       def self.structure_task_data(input)
         tasks = []
