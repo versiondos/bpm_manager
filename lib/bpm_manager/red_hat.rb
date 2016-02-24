@@ -135,7 +135,7 @@ module BpmManager
         sla.process.percent = calculate_sla_percent(my_task.process.start_on, process_sla_hours, warning_offset_percent)
         
         # Calculates the task sla
-        sla.task.status = calculate_sla(my_task.task.created_on, task_sla_hours, warning_offset_percent)
+        sla.task.status = calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent)
         sla.task.status_name = (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
         sla.task.percent = calculate_sla_percent(my_task.created_on, task_sla_hours, warning_offset_percent)
       else
