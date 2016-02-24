@@ -145,6 +145,28 @@ module BpmManager
       return sla
     end
     
+    # Private class methods
+    def self.calculate_sla(start, sla_hours=0, offset=20)
+      unless sla_hours > 0
+        (start.to_f + ((sla_hours.to_f * 7*24*60*60))*((100-offset)/100)) <= Time.now.utc.to_f ? 0 : ((start.to_f + (sla_hours.to_f * 7*24*60*60) <= Time.now.utc.to_f) ? 1 : 2)
+      else
+        0
+      end
+    end
+    private_class_method :calculate_sla
+    
+    def self.calculate_sla_percent(start, sla_hours=0, offset=20)
+      percent = OpenStruct.new
+      total = Time.now.utf.to_f - start.to_f
+      
+      percent.green = sla_hours > 0 ? (start.to_f + ((sla_hours.to_f * 7*24*60*60)) * ((100-offset)/100)) / total * 100 : 100
+      percent.yellow = sla_hours > 0 ? (start.to_f + ((sla_hours.to_f * 7*24*60*60)) / total * 100) - green : 0
+      percent.red = sla_hours > 0 ? 100 - yellow - green : 0
+      
+      return percent
+    end
+    private_class_method :calculate_sla_percent
+    
     private
       def self.structure_task_data(input)
         tasks = []
@@ -180,25 +202,6 @@ module BpmManager
         end
         
         return tasks
-      end
-      
-      def calculate_sla(start, sla_hours=0, offset=20)
-        unless sla_hours > 0
-          (start.to_f + ((sla_hours.to_f * 7*24*60*60))*((100-offset)/100)) <= Time.now.utc.to_f ? 0 : ((start.to_f + (sla_hours.to_f * 7*24*60*60) <= Time.now.utc.to_f) ? 1 : 2)
-        else
-          0
-        end
-      end
-      
-      def calculate_sla_percent(start, sla_hours=0, offset=20)
-        percent = OpenStruct.new
-        total = Time.now.utf.to_f - start.to_f
-        
-        percent.green = sla_hours > 0 ? (start.to_f + ((sla_hours.to_f * 7*24*60*60)) * ((100-offset)/100)) / total * 100 : 100
-        percent.yellow = sla_hours > 0 ? (start.to_f + ((sla_hours.to_f * 7*24*60*60)) / total * 100) - green : 0
-        percent.red = sla_hours > 0 ? 100 - yellow - green : 0
-        
-        return percent
       end
   end
 end
