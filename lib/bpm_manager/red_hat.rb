@@ -124,13 +124,11 @@ module BpmManager
     
     # Gets the SLA for a Process Instance
     def self.get_task_sla(task_instance_id, process_sla_hours = 0, task_sla_hours = 0, warning_offset_percent = 20)
-      sla = OpenStruct.new
-      sla.task = OpenStruct.new
-      sla.process = OpenStruct.new
-      my_task = self.tasks_with_opts(:taskId => task_instance_id).first
+      my_task = self.tasks_with_opts('taskId' => task_instance_id).first
       
       unless my_task.nil?
-      else
+        sla = OpenStruct.new(:task => OpenStruct.new, :process => OpenStruct.new)
+
         # Calculates the process sla
         sla.process.status = calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent)
         sla.process.status_name = (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
@@ -140,6 +138,8 @@ module BpmManager
         sla.task.status = calculate_sla(my_task.task.created_on, task_sla_hours, warning_offset_percent)
         sla.task.status_name = (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
         sla.task.percent = calculate_sla_percent(my_task.created_on, task_sla_hours, warning_offset_percent)
+      else
+        sla = nil
       end
       
       return sla
