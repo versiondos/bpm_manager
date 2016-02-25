@@ -147,8 +147,18 @@ module BpmManager
     
     # Private class methods
     def self.calculate_sla(start, sla_hours = 0.0, offset = 20)
-      sla_hours = sla_hours.to_f * 3600   # converts to seconds
-      sla_hours > 0 ? Time.at((start.utc + sla_hours).to_f * ((100 - offset) / 100)) >= Time.now.utc ? 0 : (start.utc + sla_hours >= Time.now.utc ? 1 : 2) : 0
+      # Converts to seconds and calculates warning offset
+      sla_hours = sla_hours.to_f * 3600 * ((100 - offset) / 100)
+      
+      if sla_hours > 0
+        if start.utc + sla_hours >= Time.now.utc 
+          0
+        else
+          start.utc + sla_hours >= Time.now.utc ? 1 : 2
+        end
+      else
+        0
+      end
     end
     private_class_method :calculate_sla
     
@@ -157,7 +167,7 @@ module BpmManager
       percent = OpenStruct.new
       total = (Time.now.utc - start.utc).to_f
       
-      percent.green  = sla_hours > 0 ? ((start.utc + sla_hours).to_f * (100 - offset) / 100) * 100 / total : 100
+      percent.green  = sla_hours > 0 ? ((start.utc + (sla_hours * (100 - offset) / 100)).to_f) * 100 / total : 100
       percent.yellow = sla_hours > 0 ? ((start.utc + sla_hours).to_f * 100 / total) - percent.green : 0
       percent.red    = sla_hours > 0 ? 100 - percent.yellow - percent.green : 0
       
