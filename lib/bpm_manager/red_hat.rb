@@ -148,30 +148,24 @@ module BpmManager
     # Private class methods
     def self.calculate_sla(start, sla_hours = 0.0, offset = 20)
       # Converts to seconds and calculates warning offset
-      sla_hours = sla_hours.to_f * 3600 * ((100 - offset) / 100)
+      sla_hours_ok = sla_hours.to_f * 3600
+      sla_hours_warn = sla_hours_ok * ((100 - offset) / 100)
       
-      if sla_hours > 0
-        if start.utc + sla_hours >= Time.now.utc 
-          0
-        else
-          start.utc + sla_hours >= Time.now.utc ? 1 : 2
-        end
-      else
-        0
-      end
+      # Returns the status      
+      sla_hours > 0 ? (start.utc + sla_hours_warn >= Time.now.utc ? (start.utc + sla_hours_ok >= Time.now.utc ? 0 : 1) : 2) : 0
     end
     private_class_method :calculate_sla
     
-    def self.calculate_sla_percent(start, sla_hours=0, offset=20)
-      sla_hours = sla_hours.to_f * 3600   # converts to seconds
-      percent = OpenStruct.new
+    def self.calculate_sla_percent(start, sla_hours = 0.0, offset = 20)
       total = (Time.now.utc - start.utc).to_f
+      sla_hours = sla_hours.to_f * 3600   # converts to seconds
+      percentage = OpenStruct.new
       
-      percent.green  = sla_hours > 0 ? ((start.utc + (sla_hours * (100 - offset) / 100)).to_f) * 100 / total : 100
-      percent.yellow = sla_hours > 0 ? ((start.utc + sla_hours).to_f * 100 / total) - percent.green : 0
-      percent.red    = sla_hours > 0 ? 100 - percent.yellow - percent.green : 0
+      percentage.green  = sla_hours > 0 ? (start.utc + (sla_hours * (100 - offset) / 100)).to_f * 100 / total : 100
+      percentage.yellow = sla_hours > 0 ? ((start.utc + sla_hours).to_f * 100 / total) - percent.green : 0
+      percentage.red    = sla_hours > 0 ? 100 - percent.yellow - percent.green : 0
       
-      return percent
+      return percentage
     end
     private_class_method :calculate_sla_percent
     
