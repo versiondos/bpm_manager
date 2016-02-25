@@ -132,12 +132,12 @@ module BpmManager
         # Calculates the process sla
         sla.process.status = calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent)
         sla.process.status_name = (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
-        sla.process.percent = calculate_sla_percent(my_task.process.start_on, process_sla_hours, warning_offset_percent)
+        sla.process.percentages = calculate_sla_percent(my_task.process.start_on, process_sla_hours, warning_offset_percent)
         
         # Calculates the task sla
         sla.task.status = calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent)
         sla.task.status_name = (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
-        sla.task.percent = calculate_sla_percent(my_task.created_on, task_sla_hours, warning_offset_percent)
+        sla.task.percentages = calculate_sla_percent(my_task.created_on, task_sla_hours, warning_offset_percent)
       else
         sla = nil
       end
@@ -159,13 +159,13 @@ module BpmManager
     def self.calculate_sla_percent(start, sla_hours = 0.0, offset = 20)
       total = (Time.now.utc - start.utc).to_f
       sla_hours = sla_hours.to_f * 3600   # converts to seconds
-      percentage = OpenStruct.new
+      percent = OpenStruct.new
       
-      percentage.green  = sla_hours > 0 ? (start.utc + (sla_hours * (100 - offset) / 100)).to_f * 100 / total : 100
-      percentage.yellow = sla_hours > 0 ? ((start.utc + sla_hours).to_f * 100 / total) - percent.green : 0
-      percentage.red    = sla_hours > 0 ? 100 - percent.yellow - percent.green : 0
+      percent.green  = sla_hours > 0 ? (start.utc + (sla_hours * (100 - offset) / 100)).to_f * 100 / total : 100
+      percent.yellow = sla_hours > 0 ? ((start.utc + sla_hours).to_f * 100 / total) - percent.green : 0
+      percent.red    = sla_hours > 0 ? 100 - percent.yellow - percent.green : 0
       
-      return percentage
+      return percent
     end
     private_class_method :calculate_sla_percent
     
