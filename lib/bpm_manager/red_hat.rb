@@ -157,13 +157,13 @@ module BpmManager
     private_class_method :calculate_sla
     
     def self.calculate_sla_percent(start, sla_hours = 0.0, offset = 20)
-      total = (Time.now.utc - start.utc).to_f
+      total = Time.now.utc > start.utc ? (Time.now.utc - start.utc).to_f : (start.utc - Time.now.utc).to_f
       sla_hours = sla_hours.to_f * 3600   # converts to seconds
-      percent = OpenStruct.new
       
-      percent.green  = sla_hours > 0 ? (start.utc + (sla_hours * (100 - offset) / 100)).to_f * 100 / total : 100
-      percent.yellow = sla_hours > 0 ? ((start.utc + sla_hours).to_f * 100 / total) - percent.green : 0
-      percent.red    = sla_hours > 0 ? 100 - percent.yellow - percent.green : 0
+      percent = OpenStruct.new
+      percent.green  = sla_hours > 0 ? ((sla_hours * (100 - offset) / 100) / total * 100).round(2) : 100
+      percent.yellow = sla_hours > 0 ? ((sla_hours / total * 100) - percent.green).round(2) : 0
+      percent.red    = sla_hours > 0 ? (100 - percent.yellow - percent.green).round(2) : 0
       
       return percent
     end
