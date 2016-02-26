@@ -157,13 +157,26 @@ module BpmManager
     private_class_method :calculate_sla
     
     def self.calculate_sla_percent(start, sla_hours = 0.0, offset = 20)
-      total = Time.now.utc > start.utc ? (Time.now.utc - start.utc).to_f : (start.utc - Time.now.utc).to_f
       sla_hours = sla_hours.to_f * 3600   # converts to seconds
-      
       percent = OpenStruct.new
-      percent.green  = sla_hours > 0 ? ((sla_hours * (100 - offset) / 100) / total * 100).round(2) : 100
-      percent.yellow = sla_hours > 0 ? ((sla_hours / total * 100) - percent.green).round(2) : 0
-      percent.red    = sla_hours > 0 ? (100 - percent.yellow - percent.green).round(2) : 0
+      
+      unless sla_hours < 1
+        if Time.now.utc > (start.utc + sla_hours) # Still Green
+          total = (start.utc + sla_hours).to_f
+          percent.green  = ((sla_hours * (100 - offset) / 100) / total * 100).round(2)
+          percent.yellow = (Time.now.utc > start.utc + (sla_hours * (100 - offset) / 100)) ? ((sla_hours / total * 100) - percent.green).round(2) : 0.0
+          percent.red    = 0.0
+        else  # Ruby Red
+          total = (Time.now.utc - start.utc).to_f
+          percent.green  = ((sla_hours * (100 - offset) / 100) / total * 100).round(2)
+          percent.yellow = ((sla_hours / total * 100) - percent.green).round(2)
+          percent.red    = (100 - percent.yellow - percent.green).round(2)
+        end
+      else
+        percent.green  = 100.0
+        percent.yellow = 0.0
+        percent.red    = 0.0
+      end
       
       return percent
     end
