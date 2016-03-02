@@ -157,20 +157,21 @@ module BpmManager
     private_class_method :calculate_sla
     
     def self.calculate_sla_percent(start, sla_hours = 0.0, offset = 20)
-      sla_hours = sla_hours.to_f * 3600   # converts to seconds
+      sla_hours = sla_hours * 3600.0   # converts to seconds
+      offset_pcg = (100.0 - offset) / 100.0
       percent = OpenStruct.new
       
-      unless sla_hours < 1
-        if Time.now.utc > (start.utc + sla_hours) # Still Green
-          total = (start.utc + sla_hours).to_f
-          percent.green  = ((sla_hours * (100 - offset) / 100) / total * 100).round(2)
-          percent.yellow = (Time.now.utc > start.utc + (sla_hours * (100 - offset) / 100)) ? ((sla_hours / total * 100) - percent.green).round(2) : 0.0
-          percent.red    = 0.0
-        else  # Ruby Red
+      unless sla_hours < 1 # it's zero or negative
+        if Time.now.utc > (start.utc + sla_hours) # Ruby Red
           total = (Time.now.utc - start.utc).to_f
-          percent.green  = ((sla_hours * (100 - offset) / 100) / total * 100).round(2)
+          percent.green  = (sla_hours * offset_pcg / total * 100).round(2)
           percent.yellow = ((sla_hours / total * 100) - percent.green).round(2)
           percent.red    = (100 - percent.yellow - percent.green).round(2)
+        else   # Still Green
+          total = sla_hours
+          percent.green  = Time.now.utc <= start.utc + total * offset_pcg ? ((100-offset) - (((start.utc + total * offset_pcg) - Time.now.utc) * 100).to_f / (total * offset_pcg).to_f).round(2) : 100 - offset
+          percent.yellow = Time.now.utc <= start.utc + total * offset_pcg ? 0.0 : (offset - (start.utc + total - Time.now.utc).to_f * 100 / (total * offset_pcg).to_f).round(2)
+          percent.red    = 0.0
         end
       else
         percent.green  = 100.0
