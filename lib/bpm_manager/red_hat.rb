@@ -147,12 +147,12 @@ module BpmManager
     
     # Private class methods
     def self.calculate_sla(start, sla_hours = 0.0, offset = 20)
-      # Converts to seconds and calculates warning offset
-      sla_hours_ok = sla_hours.to_f * 3600
-      sla_hours_warn = sla_hours_ok * ((100 - offset) / 100)
+      hours = sla_hours.to_f * 3600   # Converts to seconds and calculates warning offset
+      warn = start.utc + hours * ((100.0 - offset) / 100)
+      total = start.utc + hours
       
       # Returns the status      
-      sla_hours > 0 ? (start.utc + sla_hours_warn >= Time.now.utc ? (start.utc + sla_hours_ok >= Time.now.utc ? 0 : 1) : 2) : 0
+      Time.now.utc <= warn ? 0 : ( warn < Time.now.utc && Time.now.utc <= total ? 1 : 2 )
     end
     private_class_method :calculate_sla
     
