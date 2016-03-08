@@ -173,6 +173,11 @@ module BpmManager
           percent.yellow = Time.now.utc <= start.utc + total * offset_pcg ? 0.0 : (offset - (start.utc + total - Time.now.utc).to_f * 100 / (total * offset_pcg).to_f).round(2)
           percent.red    = 0.0
         end
+        
+        # Safe to 0.0
+        percent.green  = percent.green < 0.0 ? 0.0 : percent.green
+        percent.yellow = percent.yellow < 0.0 ? 0.0 : percent.yellow
+        percent.red    = percent.red < 0.0 ? 0.0 : percent.red
       else
         percent.green  = 100.0
         percent.yellow = 0.0
