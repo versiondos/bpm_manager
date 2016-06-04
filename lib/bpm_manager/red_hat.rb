@@ -38,12 +38,12 @@ module BpmManager
     
     # Gets all tasks, optionally you could specify an user id
     def self.tasks(user_id = '')
-      self.structure_task_data(JSON.parse(BpmManager.server['/task/query'].get(:taskOwner => user_id)))
+      self.structure_task_data(JSON.parse(BpmManager.server['/task/query?taskOwner=' + user_id].get))
     end
     
     # Gets all tasks with options
     def self.tasks_with_opts(opts = {})
-      self.structure_task_data(JSON.parse(BpmManager.server['/task/query'].get(opts)))
+      self.structure_task_data(JSON.parse(BpmManager.server['/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))].get))
     end
     
     # Assigns a Task for an User
