@@ -11,7 +11,9 @@ module BpmManager
     
     # Creates a new Process
     def self.create_process(deployment_id, process_definition_id, opts = {})
-      RestClient.post(URI.encode(BpmManager.uri('/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&')))), :headers => {:content_type => :json, :accept => :json})
+      url = URI.encode(BpmManager.uri('/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))))
+      puts '---->' + url.inspect
+      RestClient.post(url, :headers => {:content_type => :json, :accept => :json})
     end
     
     # Gets all Process Instances
