@@ -28,11 +28,11 @@ module BpmManager
     def self.process_instance_variables(process_instance_id)
       begin
         result = Hash.new
-        JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s + '/variable'].get)['historyLogList'].each{|e| result[e['variable-instance-log']['variable-id']] = e['variable-instance-log']['value']}
+        JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s + '/variable'].get)['historyLogList'].each{|e| result[e.first.second['variable-id']] = e.first.second['value']}
         
         return result
       rescue
-        return []
+        return {}   # same result as not found record in jbpm
       end
     end
     
