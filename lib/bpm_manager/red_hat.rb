@@ -38,7 +38,7 @@ module BpmManager
     
     # Gets the Process image as SVG    
     def self.process_image(deployment_id, process_definition_id, process_id = '')
-      BpmManager.server['/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/image' + ((process_id.nil? || process_id.empty?) ? '' : '/' + process_id)].get
+      BpmManager.server['/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/image' + ((process_id.to_s.nil? || process_id.to_s.empty?) ? '' : '/' + process_id.to_s)].get
     end
     
     # Gets all tasks, optionally you could specify an user id
