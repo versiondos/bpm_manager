@@ -191,7 +191,7 @@ module BpmManager
     private
       def self.structure_task_data(input)
         tasks = []
-        logger.info '---> Enter input: ' + input.inspect
+        puts '---> Enter input: ' + input.inspect
         
         unless input['taskSummaryList'].nil? || input['taskSummaryList'].empty?
           input['taskSummaryList'].each do |task|
@@ -210,7 +210,7 @@ module BpmManager
             my_task.description = task['task-summary']['description']
             my_task.data = task['task-summary']
             
-            logger.info '---> Task data: ' + my_task.inspect
+            puts '---> Task data: ' + my_task.inspect
             
             my_task.process = OpenStruct.new
             my_task.process.data = self.process_instance(task['task-summary']['process-instance-id'])
@@ -223,13 +223,13 @@ module BpmManager
             my_task.process.creator = my_task.process.data['identity']
             my_task.process.variables = self.process_instance_variables(my_task.process.instance_id)
             
-            logger.info '---> Process data: ' + my_task.process.inspect
+            puts '---> Process data: ' + my_task.process.inspect
             
             tasks << my_task
           end
         end
         
-        logger.info '---> Array data: ' + tasks.inspect
+        puts '---> Array data: ' + tasks.inspect
         
         return tasks
       end
