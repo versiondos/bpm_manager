@@ -58,32 +58,32 @@ module BpmManager
     
     # Starts a Task
     def self.start_task(task_id)
-      BpmManager.server['/task/' + task_id.to_s + '/start'].post
+      BpmManager.server['/task/' + task_id.to_s + '/start'].post({})
     end
     
     # Releases a Task
     def self.release_task(task_id)
-      BpmManager.server['/task/' + task_id.to_s + '/release'].post
+      BpmManager.server['/task/' + task_id.to_s + '/release'].post({})
     end
     
     # Stops a Task
     def self.stop_task(task_id)
-      BpmManager.server['/task/' + task_id.to_s + '/stop'].post
+      BpmManager.server['/task/' + task_id.to_s + '/stop'].post({})
     end
     
     # Suspends a Task
     def self.suspend_task(task_id)
-      BpmManager.server['/task/' + task_id.to_s + '/suspend'].post
+      BpmManager.server['/task/' + task_id.to_s + '/suspend'].post({})
     end
     
     # Resumes a Task
     def self.resume_task(task_id)
-      BpmManager.server['/task/' + task_id.to_s + '/resumes'].post
+      BpmManager.server['/task/' + task_id.to_s + '/resumes'].post({})
     end
     
     # Skips a Task
     def self.skip_task(task_id)
-      BpmManager.server['/task/' + task_id.to_s + '/skip'].post
+      BpmManager.server['/task/' + task_id.to_s + '/skip'].post({})
     end
     
     # Completes a Task
@@ -100,12 +100,12 @@ module BpmManager
     
     # Fails a Task
     def self.fail_task(task_id)
-      BpmManager.server['/task/' + task_id.to_s + '/fail'].post
+      BpmManager.server['/task/' + task_id.to_s + '/fail'].post({})
     end
     
     # Exits a Task
     def self.exit_task(task_id)
-      BpmManager.server['/task/' + task_id.to_s + '/exit'].post
+      BpmManager.server['/task/' + task_id.to_s + '/exit'].post({})
     end
     
     # Gets the Process History
@@ -119,7 +119,7 @@ module BpmManager
     
     # Clears all the History --WARNING: Destructive action!--
     def self.clear_all_history()
-      BpmManager.server['/history/clear'].post
+      BpmManager.server['/history/clear'].post({})
     end
     
     # Gets the SLA for a Process Instance
