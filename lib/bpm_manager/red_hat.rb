@@ -37,8 +37,8 @@ module BpmManager
     end
     
     # Gets all tasks, optionally you could specify an user id
-    def self.tasks(user_id = "")
-      self.structure_task_data(JSON.parse(BpmManager.server['/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)].get))
+    def self.tasks(user_id = '')
+      self.structure_task_data(JSON.parse(BpmManager.server['/task/query'].get(:taskOwner => user_id)))
     end
     
     # Gets all tasks with options
@@ -214,9 +214,7 @@ module BpmManager
             my_task.creator = self.task_query(task['id'])['taskData']['created-by']
             my_task.owner = task['actual-owner']
             my_task.data = task
-            
-            puts '---> Task data: ' + my_task.inspect
-            
+
             my_task.process = OpenStruct.new
             my_task.process.data = self.process_instance(task['process-instance-id'])
             my_task.process.deployment_id = task['deployment-id']
@@ -227,14 +225,9 @@ module BpmManager
             my_task.process.version = my_task.process.data['process-version']
             my_task.process.creator = my_task.process.data['identity']
             my_task.process.variables = self.process_instance_variables(my_task.process.instance_id)
-            
-            puts '---> Process data: ' + my_task.process.inspect
-            
             tasks << my_task
           end
         end
-        
-        puts '---> Array data: ' + tasks.inspect
         
         return tasks
       end
