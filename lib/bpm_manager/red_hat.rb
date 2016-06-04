@@ -191,30 +191,35 @@ module BpmManager
     private
       def self.structure_task_data(input)
         tasks = []
-        puts '---> Enter input: ' + input.inspect
         
         unless input['taskSummaryList'].nil? || input['taskSummaryList'].empty?
           input['taskSummaryList'].each do |task|
             my_task = OpenStruct.new
-            my_task.id = task['task-summary']['id']
-            my_task.process_instance_id = task['task-summary']['process-instance-id']
-            my_task.parent_id = task['task-summary']['parent_id']
-            my_task.created_on = Time.at(task['task-summary']['created-on']/1000)
-            my_task.active_on = Time.at(task['task-summary']['activation-time']/1000)
-            my_task.name = task['task-summary']['name']
-            my_task.form_name = self.task_query(task['task-summary']['id'])['form-name']
-            my_task.creator = self.task_query(task['task-summary']['id'])['taskData']['created-by']
-            my_task.owner = task['task-summary']['actual-owner']
-            my_task.status = task['task-summary']['status']
-            my_task.subject = task['task-summary']['subject']
-            my_task.description = task['task-summary']['description']
-            my_task.data = task['task-summary']
+            my_task.id = task['id']
+            my_task.name = task['name']
+            my_task.subject = task['subject']
+            my_task.description = task['description']
+            my_task.status = task['status']
+            my_task.priority = task['priority']
+            my_task.skippable = task['skippable']
+            my_task.created_on = Time.at(task['created-on']/1000)
+            my_task.active_on = Time.at(task['activation-time']/1000)
+            my_task.process_instance_id = task['process-instance-id']
+            my_task.process_id = task['process-id']
+            my_task.process_session_id = task['process-session-id']
+            my_task.deployment_id = task['deployment-id']
+            my_task.quick_task_summary = task['quick-task-summary']
+            my_task.parent_id = task['parent_id']
+            my_task.form_name = self.task_query(task['id'])['form-name']
+            my_task.creator = self.task_query(task['id'])['taskData']['created-by']
+            my_task.owner = task['actual-owner']
+            my_task.data = task
             
             puts '---> Task data: ' + my_task.inspect
             
             my_task.process = OpenStruct.new
-            my_task.process.data = self.process_instance(task['task-summary']['process-instance-id'])
-            my_task.process.deployment_id = task['task-summary']['deployment-id']
+            my_task.process.data = self.process_instance(task['process-instance-id'])
+            my_task.process.deployment_id = task['deployment-id']
             my_task.process.id = my_task.process.data['process-id']
             my_task.process.instance_id = my_task.process.data['process-instance-id']
             my_task.process.start_on = Time.at(my_task.process.data['start']/1000)
