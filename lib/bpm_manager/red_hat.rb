@@ -11,7 +11,7 @@ module BpmManager
     
     # Creates a new Process
     def self.create_process(deployment_id, process_definition_id, opts = {})
-      self.server[URI.encode(BpmManager.uri('/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))))].post
+      BpmManager.server[URI.encode(BpmManager.uri('/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))))].post
     end
     
     # Gets all Process Instances
