@@ -6,7 +6,7 @@ module BpmManager
   module RedHat
     # Gets all server deployments
     def self.deployments()
-      return JSON.parse(BpmManager.server['/deployment'].get)
+      JSON.parse(BpmManager.server['/deployment'].get)
     end
     
     # Creates a new Process
@@ -38,7 +38,11 @@ module BpmManager
     
     # Gets the Process image as SVG    
     def self.process_image(deployment_id, process_definition_id, process_id = '')
-      BpmManager.server['/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/image' + ((process_id.to_s.nil? || process_id.to_s.empty?) ? '' : '/' + process_id.to_s)].get
+      begin
+        BpmManager.server['/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/image' + ((process_id.to_s.nil? || process_id.to_s.empty?) ? '' : '/' + process_id.to_s)].get
+      rescue
+        return ''   # returns an empty string in case of error
+      end
     end
     
     # Gets all tasks, optionally you could specify an user id
