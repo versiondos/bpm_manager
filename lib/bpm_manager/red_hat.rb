@@ -6,7 +6,7 @@ module BpmManager
   module RedHat
     # Gets all server deployments
     def self.deployments()
-      return JSON.parse(RestClient.get(BpmManager.uri('/deployment'), :accept => :json))
+      return JSON.parse(BpmManager.server['/deployment'].get)
     end
     
     # Creates a new Process
@@ -21,14 +21,14 @@ module BpmManager
     
     # Gets a Process Instance
     def self.process_instance(process_instance_id)
-      JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s), :accept => :json))
+      JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s].get)
     end
     
     # Gets a Process Instance Variables
     def self.process_instance_variables(process_instance_id)
       begin
         result = Hash.new
-        JSON.parse(RestClient.get(BpmManager.uri('/history/instance/' + process_instance_id.to_s + '/variable'), :accept => :json))['historyLogList'].each{|e| result[e['variable-instance-log']['variable-id']] = e['variable-instance-log']['value']}
+        JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s + '/variable'].get)['historyLogList'].each{|e| result[e['variable-instance-log']['variable-id']] = e['variable-instance-log']['value']}
         
         return result
       rescue
@@ -38,88 +38,88 @@ module BpmManager
     
     # Gets all tasks, optionally you could specify an user id
     def self.tasks(user_id = "")
-      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)), :accept => :json)))
+      self.structure_task_data(JSON.parse(BpmManager.server['/task/query' + (user_id.empty? ? '' : '?taskOwner=' + user_id)].get))
     end
     
     # Gets all tasks with options
     def self.tasks_with_opts(opts = {})
-      self.structure_task_data(JSON.parse(RestClient.get(BpmManager.uri('/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))), :accept => :json)))
+      self.structure_task_data(JSON.parse(BpmManager.server['/task/query'].get(opts)))
     end
     
     # Assigns a Task for an User
     def self.assign_task(task_id, user_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/delegate?targetEntityId=' + user_id.to_s)), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/delegate'].post(:targetEntityId => user_id.to_s)
     end
 
     # Gets all the information for a Task ID
     def self.task_query(task_id)
-      JSON.parse(RestClient.get(BpmManager.uri('/task/' + task_id.to_s), :accept => :json))
+      JSON.parse(BpmManager.server['/task/' + task_id.to_s].get)
     end
     
     # Starts a Task
     def self.start_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/start')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/start'].post
     end
     
     # Releases a Task
     def self.release_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/release')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/release'].post
     end
     
     # Stops a Task
     def self.stop_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/stop')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/stop'].post
     end
     
     # Suspends a Task
     def self.suspend_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/suspend')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/suspend'].post
     end
     
     # Resumes a Task
     def self.resume_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/resumes')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/resumes'].post
     end
     
     # Skips a Task
     def self.skip_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/skip')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/skip'].post
     end
     
     # Completes a Task
     def self.complete_task(task_id, opts = {})
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&')))), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/complete'].post(opts)
     end
     
     # Completes a Task as Administrator
     def self.complete_task_as_admin(task_id, opts = {})
       self.release_task(task_id)
       self.start_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/complete' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&')))), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/complete'].post(opts)
     end
     
     # Fails a Task
     def self.fail_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/fail')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/fail'].post
     end
     
     # Exits a Task
     def self.exit_task(task_id)
-      RestClient.post(URI.encode(BpmManager.uri('/task/' + task_id.to_s + '/exit')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/task/' + task_id.to_s + '/exit'].post
     end
     
     # Gets the Process History
     def self.get_history(process_definition_id = "")
       if process_definition_id.empty?
-        JSON.parse(RestClient.get(BpmManager.uri('/history/instances'), :accept => :json))
+        JSON.parse(BpmManager.server['/history/instances'].get)
       else
-        JSON.parse(RestClient.get(BpmManager.uri('/history/process/' + process_definition_id.to_s), :accept => :json))
+        JSON.parse(BpmManager.server['/history/process/' + process_definition_id.to_s].get)
       end
     end
     
     # Clears all the History --WARNING: Destructive action!--
     def self.clear_all_history()
-      RestClient.post(URI.encode(BpmManager.uri('/history/clear')), :headers => {:content_type => :json, :accept => :json})
+      BpmManager.server['/history/clear'].post
     end
     
     # Gets the SLA for a Process Instance
