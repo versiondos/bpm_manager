@@ -32,7 +32,7 @@ module BpmManager
         
         return result
       rescue
-        return {}
+        return []
       end
     end
     
@@ -191,11 +191,11 @@ module BpmManager
     private
       def self.structure_task_data(input)
         tasks = []
+        logger.info '---> Enter input: ' + input.inspect
         
         unless input['taskSummaryList'].nil? || input['taskSummaryList'].empty?
           input['taskSummaryList'].each do |task|
             my_task = OpenStruct.new
-            my_task.process = OpenStruct.new
             my_task.id = task['task-summary']['id']
             my_task.process_instance_id = task['task-summary']['process-instance-id']
             my_task.parent_id = task['task-summary']['parent_id']
@@ -209,6 +209,10 @@ module BpmManager
             my_task.subject = task['task-summary']['subject']
             my_task.description = task['task-summary']['description']
             my_task.data = task['task-summary']
+            
+            logger.info '---> Task data: ' + my_task.inspect
+            
+            my_task.process = OpenStruct.new
             my_task.process.data = self.process_instance(task['task-summary']['process-instance-id'])
             my_task.process.deployment_id = task['task-summary']['deployment-id']
             my_task.process.id = my_task.process.data['process-id']
@@ -218,9 +222,14 @@ module BpmManager
             my_task.process.version = my_task.process.data['process-version']
             my_task.process.creator = my_task.process.data['identity']
             my_task.process.variables = self.process_instance_variables(my_task.process.instance_id)
+            
+            logger.info '---> Process data: ' + my_task.process.inspect
+            
             tasks << my_task
           end
         end
+        
+        logger.info '---> Array data: ' + tasks.inspect
         
         return tasks
       end
