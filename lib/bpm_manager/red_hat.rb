@@ -9,6 +9,11 @@ module BpmManager
       JSON.parse(BpmManager.server['/deployment'].get)
     end
     
+    # Gets all available processes
+    def self.processes()
+      JSON.parse(BpmManager.server['/deployment/processes'].get)
+    end
+    
     # Creates a new Process
     def self.create_process(deployment_id, process_definition_id, opts = {})
       BpmManager.server['/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start'].post(opts)
