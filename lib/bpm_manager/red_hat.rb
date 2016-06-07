@@ -6,12 +6,12 @@ module BpmManager
   module RedHat
     # Gets all server deployments
     def self.deployments()
-      JSON.parse(BpmManager.server['/deployment'].get)['deploymentUnitList']
+      JSON.parse(BpmManager.server['/deployment'].get)
     end
     
     # Gets all available processes
     def self.processes()
-      JSON.parse(BpmManager.server['/deployment/processes'].get)
+      JSON.parse(BpmManager.server['/deployment/processes'].get)['processDefinitionList']
     end
     
     # Creates a new Process
