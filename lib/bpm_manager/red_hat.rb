@@ -13,7 +13,7 @@ module BpmManager
     def self.processes()
       JSON.parse(BpmManager.server['/deployment/processes'].get)['processDefinitionList']
     end
-    
+
     # Creates a new Process
     def self.create_process(deployment_id, process_definition_id, opts = {})
       BpmManager.server['/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start'].post(opts)
@@ -27,6 +27,11 @@ module BpmManager
     # Gets a Process Instance
     def self.process_instance(process_instance_id)
       JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s].get)
+    end
+
+    # Gets a Process Instance Nodes
+    def self.process_instance_nodes(process_instance_id)
+      JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s + '/node'].get)['historyLogList']
     end
     
     # Gets a Process Instance Variables
