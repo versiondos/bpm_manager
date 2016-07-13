@@ -81,8 +81,8 @@ module BpmManager
     end
     
     # Gets all the runtime Tasks with query options
-    def self.task_query_with_opts(opts = {})
-      JSON.parse(BpmManager.server['/query/runtime/task/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.map{|e| k.to_s + '=' + e.to_s}.join('&') : k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
+    def self.tasks_query_with_opts(opts = {})
+      structure_task_query_data(JSON.parse(BpmManager.server['/query/runtime/task/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.map{|e| k.to_s + '=' + e.to_s}.join('&') : k.to_s + '=' + v.to_s}.join('&'))].get))
     end
   
     # Starts a Task
@@ -223,6 +223,7 @@ module BpmManager
         
         unless input['taskSummaryList'].nil? || input['taskSummaryList'].empty?
           input['taskSummaryList'].each do |task|
+            task_query = self.task_query(task['id'])
             my_task = OpenStruct.new
             my_task.id = task['id']
             my_task.name = task['name']
@@ -239,8 +240,53 @@ module BpmManager
             my_task.deployment_id = task['deployment-id']
             my_task.quick_task_summary = task['quick-task-summary']
             my_task.parent_id = task['parent_id']
-            my_task.form_name = self.task_query(task['id'])['form-name']
-            my_task.creator = self.task_query(task['id'])['taskData']['created-by']
+            my_task.form_name = task_query(task['id'])['form-name']
+            my_task.creator = task_query(task['id'])['taskData']['created-by']
+            my_task.owner = task['actual-owner']
+            my_task.data = task
+
+            my_task.process = OpenStruct.new
+            my_task.process.data = self.process_instance(task['process-instance-id'])
+            my_task.process.deployment_id = task['deployment-id']
+            my_task.process.id = my_task.process.data['process-id']
+            my_task.process.instance_id = my_task.process.data['process-instance-id']
+            my_task.process.start_on = Time.at(my_task.process.data['start']/1000)
+            my_task.process.name = my_task.process.data['process-name']
+            my_task.process.version = my_task.process.data['process-version']
+            my_task.process.creator = my_task.process.data['identity']
+            my_task.process.variables = self.process_instance_variables(my_task.process.instance_id)
+            tasks << my_task
+          end
+        end
+        
+        return tasks
+      end
+      
+      def self.structure_task_query_data(input)
+        tasks = []
+        
+        unless input['taskInfoList'].nil? || input['taskInfoList'].empty?
+          input['taskInfoList'].each do |tasks_array|
+            task = tasks_array['taskSummaries'].map{|e| e['id']}.max  # Selects only the last active task
+            task_query = self.task_query(task['id'])
+            my_task = OpenStruct.new
+            my_task.id = task['id']
+            my_task.name = task['name']
+            my_task.subject = task['subject']
+            my_task.description = task['description']
+            my_task.status = task['status']
+            my_task.priority = task['priority']
+            my_task.skippable = task['skippable']
+            my_task.created_on = Time.at(task['created-on']/1000)
+            my_task.active_on = Time.at(task['activation-time']/1000)
+            my_task.process_instance_id = task['process-instance-id']
+            my_task.process_id = task['process-id']
+            my_task.process_session_id = task['process-session-id']
+            my_task.deployment_id = task['deployment-id']
+            my_task.quick_task_summary = task['quick-task-summary']
+            my_task.parent_id = task['parent_id']
+            my_task.form_name = task_query['form-name']
+            my_task.creator = task_query['taskData']['created-by']
             my_task.owner = task['actual-owner']
             my_task.data = task
 
