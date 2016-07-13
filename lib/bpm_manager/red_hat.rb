@@ -16,7 +16,7 @@ module BpmManager
 
     # Creates a new Process
     def self.create_process(deployment_id, process_definition_id, opts = {})
-      BpmManager.server['/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start'].post(opts)
+      JSON.parse(BpmManager.server['/query/runtime/process/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.each{|e| k.to_s + '=' + e.to_s} : k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
     end
     
     # Gets all Process Instances
@@ -82,7 +82,7 @@ module BpmManager
     
     # Gets all the runtime Tasks with query options
     def self.task_query_with_opts(opts = {})
-      JSON.parse(BpmManager.server['/query/runtime/task/' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
+      JSON.parse(BpmManager.server['/query/runtime/task/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.each{|e| k.to_s + '=' + e.to_s} : k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
     end
   
     # Starts a Task
