@@ -16,7 +16,7 @@ module BpmManager
 
     # Creates a new Process
     def self.create_process(deployment_id, process_definition_id, opts = {})
-      JSON.parse(BpmManager.server['/query/runtime/process/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.each{|e| k.to_s + '=' + e.to_s} : k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
+      JSON.parse(BpmManager.server['/query/runtime/process/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.map{|e| k.to_s + '=' + e.to_s}.join('&') : k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
     end
     
     # Gets all Process Instances
@@ -26,7 +26,7 @@ module BpmManager
     
     # Gets all the runtime processes with query options
     def self.processes_query_with_opts(opts = {})
-      JSON.parse(BpmManager.server['/query/runtime/process/' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))].get)['processInstanceInfoList']
+      JSON.parse(BpmManager.server['/query/runtime/process/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.map{|e| k.to_s + '=' + e.to_s}.join('&') : k.to_s + '=' + v.to_s}.join('&'))].get)['processInstanceInfoList']
     end
     
     # Gets a Process Instance
@@ -67,7 +67,7 @@ module BpmManager
     
     # Gets all tasks with options
     def self.tasks_with_opts(opts = {})
-      self.structure_task_data(JSON.parse(BpmManager.server['/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))].get))
+      self.structure_task_data(JSON.parse(BpmManager.server['/task/query' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.map{|e| k.to_s + '=' + e.to_s}.join('&') : k.to_s + '=' + v.to_s}.join('&'))].get))
     end
     
     # Assigns a Task for an User
@@ -82,7 +82,7 @@ module BpmManager
     
     # Gets all the runtime Tasks with query options
     def self.task_query_with_opts(opts = {})
-      JSON.parse(BpmManager.server['/query/runtime/task/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.each{|e| k.to_s + '=' + e.to_s} : k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
+      JSON.parse(BpmManager.server['/query/runtime/task/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.map{|e| k.to_s + '=' + e.to_s}.join('&') : k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
     end
   
     # Starts a Task
