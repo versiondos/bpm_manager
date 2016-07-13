@@ -24,6 +24,11 @@ module BpmManager
       JSON.parse(BpmManager.server['/history/instances'].get)
     end
     
+    # Gets all the runtime processes with query options
+    def self.processes_query_with_opts(opts = {})
+      JSON.parse(BpmManager.server['/query/runtime/process/' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))].get)['processInstanceInfoList']
+    end
+    
     # Gets a Process Instance
     def self.process_instance(process_instance_id)
       JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s].get)
@@ -75,6 +80,11 @@ module BpmManager
       JSON.parse(BpmManager.server['/task/' + task_id.to_s].get)
     end
     
+    # Gets all the runtime Tasks with query options
+    def self.task_query_with_opts(opts = {})
+      JSON.parse(BpmManager.server['/query/runtime/task/' + (opts.empty? ? '' : '?' + opts.map{|k,v| k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
+    end
+  
     # Starts a Task
     def self.start_task(task_id)
       BpmManager.server['/task/' + task_id.to_s + '/start'].post({})
