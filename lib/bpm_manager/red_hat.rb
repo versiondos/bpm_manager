@@ -267,7 +267,8 @@ module BpmManager
         
         unless input['taskInfoList'].nil? || input['taskInfoList'].empty?
           input['taskInfoList'].each do |tasks_array|
-            task = tasks_array['taskSummaries'].map{|e| e['id'].to_i}.max  # Selects only the last active task
+            logger.info '-----> ' + tasks_array['taskSummaries'].map{|e| e['created-on']}
+            task = tasks_array['taskSummaries'].map{|e| e['created-on']}.max  # Selects only the last active task
             task_query = self.task_query(task['id'])
             my_task = OpenStruct.new
             my_task.id = task['id']
