@@ -262,7 +262,7 @@ module BpmManager
             my_task.process.deployment_id = task['deployment-id']
             my_task.process.id = my_task.process.data['process-id']
             my_task.process.instance_id = my_task.process.data['process-instance-id']
-            my_task.process.start_on = Time.at(my_task.process.data['start']/1000)
+            my_task.process.start_on = Time.at(my_task.process.data['start']/1000) unless my_task.process.data['start'].nil?
             my_task.process.name = my_task.process.data['process-name']
             my_task.process.version = my_task.process.data['process-version']
             my_task.process.creator = my_task.process.data['identity']
@@ -307,7 +307,7 @@ module BpmManager
             my_task.process.deployment_id = task['deployment-id']
             my_task.process.id = my_task.process.data['process-id']
             my_task.process.instance_id = my_task.process.data['process-instance-id']
-            my_task.process.start_on = Time.at(my_task.process.data['start']/1000)
+            my_task.process.start_on = Time.at(my_task.process.data['start']/1000) unless my_task.process.data['start'].nil?
             my_task.process.name = my_task.process.data['process-name']
             my_task.process.version = my_task.process.data['process-version']
             my_task.process.creator = my_task.process.data['identity']
