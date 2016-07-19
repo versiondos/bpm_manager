@@ -31,12 +31,20 @@ module BpmManager
     
     # Gets a Process Instance
     def self.process_instance(process_instance_id)
-      JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s].get)
+      begin
+        JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s].get)
+      rescue Exception
+        {}   # returns nil string in case of error
+      end
     end
 
     # Gets a Process Instance Nodes
     def self.process_instance_nodes(process_instance_id)
-      JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s + '/node'].get)['historyLogList']
+      begin
+        JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s + '/node'].get)['historyLogList']
+      rescue
+        {}   # returns nil string in case of error
+      end
     end
     
     # Gets a Process Instance Variables
@@ -77,7 +85,11 @@ module BpmManager
 
     # Gets all the information for a Task ID
     def self.task_query(task_id)
-      JSON.parse(BpmManager.server['/task/' + task_id.to_s].get)
+      begin
+        JSON.parse(BpmManager.server['/task/' + task_id.to_s].get)
+      rescue
+        {}   # returns nil string in case of error
+      end
     end
     
     # Gets all the runtime Tasks with query options
@@ -240,8 +252,8 @@ module BpmManager
             my_task.deployment_id = task['deployment-id']
             my_task.quick_task_summary = task['quick-task-summary']
             my_task.parent_id = task['parent_id']
-            my_task.form_name = task_query(task['id'])['form-name']
-            my_task.creator = task_query(task['id'])['taskData']['created-by']
+            my_task.form_name = task_query['form-name']
+            my_task.creator = task_query['taskData']['created-by']
             my_task.owner = task['actual-owner']
             my_task.data = task
             
