@@ -16,7 +16,7 @@ module BpmManager
 
     # Creates a new Process
     def self.create_process(deployment_id, process_definition_id, opts = {})
-      JSON.parse(BpmManager.server['/query/runtime/process/' + (opts.empty? ? '' : '?' + opts.map{|k,v| (v.class == Array) ? v.map{|e| k.to_s + '=' + e.to_s}.join('&') : k.to_s + '=' + v.to_s}.join('&'))].get)['taskInfoList']
+      BpmManager.server['/runtime/' + deployment_id.to_s + '/process/' + process_definition_id.to_s + '/start'].post(opts)
     end
     
     # Gets all Process Instances
@@ -244,7 +244,7 @@ module BpmManager
             my_task.creator = task_query(task['id'])['taskData']['created-by']
             my_task.owner = task['actual-owner']
             my_task.data = task
-
+            
             my_task.process = OpenStruct.new
             my_task.process.data = self.process_instance(task['process-instance-id'])
             my_task.process.deployment_id = task['deployment-id']
@@ -289,7 +289,7 @@ module BpmManager
             my_task.creator = task_query['taskData']['created-by']
             my_task.owner = task['actual-owner']
             my_task.data = task
-
+            
             my_task.process = OpenStruct.new
             my_task.process.data = self.process_instance(task['process-instance-id'])
             my_task.process.deployment_id = task['deployment-id']
