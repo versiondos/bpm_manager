@@ -169,11 +169,12 @@ module BpmManager
       
       unless my_process.nil?
         sla = OpenStruct.new(:process => OpenStruct.new)
+        start = my_process['start_on'].to_i / 1000
         
         # Calculates the process sla
-        sla.process.status = calculate_sla((my_process['start_on']/1000), process_sla_hours, warning_offset_percent)
-        sla.process.status_name = (calculate_sla((my_process['start_on']/1000), process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla((my_process['start_on']/ 1000), process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
-        sla.process.percentages = calculate_sla_percent((my_process['start_on']/1000), process_sla_hours, warning_offset_percent)
+        sla.process.status = calculate_sla(start, process_sla_hours, warning_offset_percent)
+        sla.process.status_name = (calculate_sla(start, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(start, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
+        sla.process.percentages = calculate_sla_percent(start, process_sla_hours, warning_offset_percent)
       else
         sla = nil
       end
