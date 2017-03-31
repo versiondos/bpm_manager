@@ -1,3 +1,3 @@
 module BpmManager
-  VERSION = "1.0.5"
+  VERSION = "1.0.22"
 end
