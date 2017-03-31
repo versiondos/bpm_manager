@@ -165,7 +165,7 @@ module BpmManager
 
     # Gets the SLA for a Process Instance
     def self.get_process_sla(process_instance_id, process_sla_hours = 0, warning_offset_percent = 20)
-      my_process = JSON.parse(BpmManager.server['/history/instance/' + process_instance_id.to_s].get)
+      my_process = self.process_instance(process_instance_id)
       
       unless my_process.nil?
         sla = OpenStruct.new(:process => OpenStruct.new)
