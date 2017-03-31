@@ -162,8 +162,26 @@ module BpmManager
     def self.clear_all_history()
       BpmManager.server['/history/clear'].post({})
     end
-    
+
     # Gets the SLA for a Process Instance
+    def self.get_process_sla(process_instance_id, process_sla_hours = 0, warning_offset_percent = 20)
+      my_process = self.process_instance(process_instance_id).first
+      
+      unless my_process.nil?
+        sla = OpenStruct.new(:process => OpenStruct.new)
+        
+        # Calculates the process sla
+        sla.process.status = calculate_sla((my_process['start_on']/1000), process_sla_hours, warning_offset_percent)
+        sla.process.status_name = (calculate_sla((my_process['start_on']/1000), process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla((my_process['start_on']/ 1000), process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
+        sla.process.percentages = calculate_sla_percent((my_process['start_on']/1000), process_sla_hours, warning_offset_percent)
+      else
+        sla = nil
+      end
+      
+      return sla
+    end
+    
+    # Gets the SLA for a Task Instance
     def self.get_task_sla(task_instance_id, process_sla_hours = 0, task_sla_hours = 0, warning_offset_percent = 20)
       my_task = self.tasks_with_opts('taskId' => task_instance_id).first
       
