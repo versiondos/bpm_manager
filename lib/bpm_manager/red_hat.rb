@@ -169,7 +169,7 @@ module BpmManager
       
       unless my_process.nil?
         sla = OpenStruct.new(:process => OpenStruct.new)
-        start = my_process['start'].to_i / 1000
+        start = Time.at(my_process['start']/1000)
         
         # Calculates the process sla
         sla.process.status = calculate_sla(start, process_sla_hours, warning_offset_percent)
