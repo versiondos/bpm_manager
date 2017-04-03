@@ -167,10 +167,11 @@ module BpmManager
     def self.get_process_sla(process_instance_id, process_sla_hours = 0, warning_offset_percent = 20)
       my_process = self.process_instance(process_instance_id)
       
+      
       unless my_process.nil?
         sla = OpenStruct.new(:process => OpenStruct.new)
         start_time = Time.at(my_process['start']/1000)
-        end_time = my_process['start'].nil? ? Time.now : Time.at(my_process['start']/1000)
+        end_time = my_process['end'].nil? ? Time.now : Time.at(my_process['end']/1000)
         
         # Calculates the process sla
         sla.process.status = calculate_sla(start_time, end_time, process_sla_hours, warning_offset_percent)
@@ -187,6 +188,8 @@ module BpmManager
       
       unless my_task.nil?
         sla = OpenStruct.new(:task => OpenStruct.new, :process => OpenStruct.new)
+        
+        puts '-----> Ends on: ' + my_task.process.end_on.to_s
         
         # Calculates the process sla
         sla.process.status = calculate_sla(my_task.process.start_on, my_task.process.end_on, process_sla_hours, warning_offset_percent)
@@ -212,7 +215,7 @@ module BpmManager
       # Returns the status      
       end_time.utc <= warn ? 0 : ( warn < end_time.utc && end_time.utc <= total ? 1 : 2 )
     end
-    #private_class_method :calculate_sla
+    private_class_method :calculate_sla
     
     def self.calculate_sla_percent(start_time, end_time = Time.now, sla_hours = 0.0, offset = 20)
       end_time    = Time.now   if end_time.nil?
@@ -245,7 +248,7 @@ module BpmManager
       
       return percent
     end
-    #private_class_method :calculate_sla_percent
+    private_class_method :calculate_sla_percent
     
     private
       def self.structure_task_data(input)
