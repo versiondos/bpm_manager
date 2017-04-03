@@ -169,14 +169,13 @@ module BpmManager
       
       unless my_process.nil?
         sla = OpenStruct.new(:process => OpenStruct.new)
-        start = Time.at(my_process['start']/1000)
+        start_time = Time.at(my_process['start']/1000)
+        end_time = my_process['start'].nil? ? Time.now : Time.at(my_process['start']/1000)
         
         # Calculates the process sla
-        sla.process.status = calculate_sla(start, process_sla_hours, warning_offset_percent)
-        sla.process.status_name = (calculate_sla(start, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(start, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
-        sla.process.percentages = calculate_sla_percent(start, process_sla_hours, warning_offset_percent)
-      else
-        sla = nil
+        sla.process.status = calculate_sla(start_time, end_time, process_sla_hours, warning_offset_percent)
+        sla.process.status_name = (calculate_sla(start_time, end_time, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(start_time, end_time, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
+        sla.process.percentages = calculate_sla_percent(start_time, end_time, process_sla_hours, warning_offset_percent)
       end
       
       return sla
@@ -190,47 +189,45 @@ module BpmManager
         sla = OpenStruct.new(:task => OpenStruct.new, :process => OpenStruct.new)
         
         # Calculates the process sla
-        sla.process.status = calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent)
-        sla.process.status_name = (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.process.start_on, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
-        sla.process.percentages = calculate_sla_percent(my_task.process.start_on, process_sla_hours, warning_offset_percent)
+        sla.process.status = calculate_sla(my_task.process.start_on, my_task.process.end_on, process_sla_hours, warning_offset_percent)
+        sla.process.status_name = (calculate_sla(my_task.process.start_on, my_task.process.end_on, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.process.start_on, my_task.process.end_on, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
+        sla.process.percentages = calculate_sla_percent(my_task.process.start_on, my_task.process.end_on, process_sla_hours, warning_offset_percent)
         
         # Calculates the task sla
-        sla.task.status = calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent)
-        sla.task.status_name = (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.created_on, task_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
-        sla.task.percentages = calculate_sla_percent(my_task.created_on, task_sla_hours, warning_offset_percent)
-      else
-        sla = nil
+        sla.task.status = calculate_sla(my_task.created_on, nil, task_sla_hours, warning_offset_percent)
+        sla.task.status_name = (calculate_sla(my_task.created_on, nil, task_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.created_on, nil, task_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
+        sla.task.percentages = calculate_sla_percent(my_task.created_on, nil, task_sla_hours, warning_offset_percent)
       end
       
       return sla
     end
     
     # Private class methods
-    def self.calculate_sla(start, sla_hours = 0.0, offset = 20)
+    def self.calculate_sla(start_time, end_time = Time.now, sla_hours = 0.0, offset = 20)
       hours = sla_hours.to_f * 3600   # Converts to seconds and calculates warning offset
-      warn = start.utc + hours * ((100.0 - offset) / 100)
-      total = start.utc + hours
+      warn = start_time.utc + hours * ((100.0 - offset) / 100)
+      total = start_time.utc + hours
       
       # Returns the status      
-      Time.now.utc <= warn ? 0 : ( warn < Time.now.utc && Time.now.utc <= total ? 1 : 2 )
+      end_time.utc <= warn ? 0 : ( warn < end_time.utc && end_time.utc <= total ? 1 : 2 )
     end
     private_class_method :calculate_sla
     
-    def self.calculate_sla_percent(start, sla_hours = 0.0, offset = 20)
+    def self.calculate_sla_percent(start_time, end_time = Time.now, sla_hours = 0.0, offset = 20)
       sla_hours = sla_hours * 3600.0   # converts to seconds
       offset_pcg = (100.0 - offset) / 100.0
       percent = OpenStruct.new
       
       unless sla_hours < 1 # it's zero or negative
-        if Time.now.utc > (start.utc + sla_hours) # Ruby Red
-          total = (Time.now.utc - start.utc).to_f
+        if end_time.utc > (start_time.utc + sla_hours) # Ruby Red
+          total = (end_time.utc - start_time.utc).to_f
           percent.green  = (sla_hours * offset_pcg / total * 100).round(2)
           percent.yellow = ((sla_hours / total * 100) - percent.green).round(2)
           percent.red    = (100 - percent.yellow - percent.green).round(2)
         else   # Still Green
           total = sla_hours
-          percent.green  = Time.now.utc <= start.utc + total * offset_pcg ? ((100-offset) - (((start.utc + total * offset_pcg) - Time.now.utc) * 100).to_f / (total * offset_pcg).to_f).round(2) : 100 - offset
-          percent.yellow = Time.now.utc <= start.utc + total * offset_pcg ? 0.0 : (offset - (start.utc + total - Time.now.utc).to_f * 100 / (total * offset_pcg).to_f).round(2)
+          percent.green  = end_time.utc <= start_time.utc + total * offset_pcg ? ((100-offset) - (((start_time.utc + total * offset_pcg) - end_time.utc) * 100).to_f / (total * offset_pcg).to_f).round(2) : 100 - offset
+          percent.yellow = end_time.utc <= start_time.utc + total * offset_pcg ? 0.0 : (offset - (start_time.utc + total - end_time.utc).to_f * 100 / (total * offset_pcg).to_f).round(2)
           percent.red    = 0.0
         end
         
@@ -255,37 +252,38 @@ module BpmManager
         unless input['taskSummaryList'].nil? || input['taskSummaryList'].empty?
           input['taskSummaryList'].each do |task|
             task_query = self.task_query(task['id'])
-            my_task = OpenStruct.new
-            my_task.id = task['id']
-            my_task.name = task['name']
-            my_task.subject = task['subject']
-            my_task.description = task['description']
-            my_task.status = task['status']
-            my_task.priority = task['priority']
-            my_task.skippable = task['skippable']
-            my_task.created_on = Time.at(task['created-on']/1000)
-            my_task.active_on = Time.at(task['activation-time']/1000)
+            my_task                     = OpenStruct.new
+            my_task.id                  = task['id']
+            my_task.name                = task['name']
+            my_task.subject             = task['subject']
+            my_task.description         = task['description']
+            my_task.status              = task['status']
+            my_task.priority            = task['priority']
+            my_task.skippable           = task['skippable']
+            my_task.created_on          = Time.at(task['created-on']/1000)
+            my_task.active_on           = Time.at(task['activation-time']/1000)
             my_task.process_instance_id = task['process-instance-id']
-            my_task.process_id = task['process-id']
-            my_task.process_session_id = task['process-session-id']
-            my_task.deployment_id = task['deployment-id']
-            my_task.quick_task_summary = task['quick-task-summary']
-            my_task.parent_id = task['parent_id']
-            my_task.form_name = task_query['form-name']
-            my_task.creator = task_query['taskData']['created-by']
-            my_task.owner = task['actual-owner']
-            my_task.data = task
+            my_task.process_id          = task['process-id']
+            my_task.process_session_id  = task['process-session-id']
+            my_task.deployment_id       = task['deployment-id']
+            my_task.quick_task_summary  = task['quick-task-summary']
+            my_task.parent_id           = task['parent_id']
+            my_task.form_name           = task_query['form-name']
+            my_task.creator             = task_query['taskData']['created-by']
+            my_task.owner               = task['actual-owner']
+            my_task.data                = task
             
-            my_task.process = OpenStruct.new
-            my_task.process.data = self.process_instance(task['process-instance-id'])
+            my_task.process               = OpenStruct.new
+            my_task.process.data          = self.process_instance(task['process-instance-id'])
             my_task.process.deployment_id = task['deployment-id']
-            my_task.process.id = my_task.process.data['process-id']
-            my_task.process.instance_id = my_task.process.data['process-instance-id']
-            my_task.process.start_on = my_task.process.data['start'].nil? ? Time.now : Time.at(my_task.process.data['start']/1000)
-            my_task.process.name = my_task.process.data['process-name']
-            my_task.process.version = my_task.process.data['process-version']
-            my_task.process.creator = my_task.process.data['identity']
-            my_task.process.variables = self.process_instance_variables(my_task.process.instance_id)
+            my_task.process.id            = my_task.process.data['process-id']
+            my_task.process.instance_id   = my_task.process.data['process-instance-id']
+            my_task.process.start_on      = my_task.process.data['start'].nil? ? Time.now : Time.at(my_task.process.data['start']/1000)
+            my_task.process.end_on        = my_task.process.data['end'].nil? ? nil : Time.at(my_task.process.data['end']/1000)
+            my_task.process.name          = my_task.process.data['process-name']
+            my_task.process.version       = my_task.process.data['process-version']
+            my_task.process.creator       = my_task.process.data['identity']
+            my_task.process.variables     = self.process_instance_variables(my_task.process.instance_id)
             tasks << my_task
           end
         end
@@ -298,39 +296,40 @@ module BpmManager
         
         unless input['taskInfoList'].nil? || input['taskInfoList'].empty?
           input['taskInfoList'].each do |tasks_array|
-            task = tasks_array['taskSummaries'].max_by{|e| e['created-on']}  # Selects only the last active task
-            task_query = self.task_query(task['id'])
-            my_task = OpenStruct.new
-            my_task.id = task['id']
-            my_task.name = task['name']
-            my_task.subject = task['subject']
-            my_task.description = task['description']
-            my_task.status = task['status']
-            my_task.priority = task['priority']
-            my_task.skippable = task['skippable']
-            my_task.created_on = Time.at(task['created-on']/1000)
-            my_task.active_on = Time.at(task['activation-time']/1000)
+            task        = tasks_array['taskSummaries'].max_by{|e| e['created-on']}  # Selects only the last active task
+            task_query  = self.task_query(task['id'])
+            my_task                     = OpenStruct.new
+            my_task.id                  = task['id']
+            my_task.name                = task['name']
+            my_task.subject             = task['subject']
+            my_task.description         = task['description']
+            my_task.status              = task['status']
+            my_task.priority            = task['priority']
+            my_task.skippable           = task['skippable']
+            my_task.created_on          = Time.at(task['created-on']/1000)
+            my_task.active_on           = Time.at(task['activation-time']/1000)
             my_task.process_instance_id = task['process-instance-id']
-            my_task.process_id = task['process-id']
-            my_task.process_session_id = task['process-session-id']
-            my_task.deployment_id = task['deployment-id']
-            my_task.quick_task_summary = task['quick-task-summary']
-            my_task.parent_id = task['parent_id']
-            my_task.form_name = task_query['form-name']
-            my_task.creator = task_query['taskData']['created-by']
-            my_task.owner = task['actual-owner']
-            my_task.data = task
+            my_task.process_id          = task['process-id']
+            my_task.process_session_id  = task['process-session-id']
+            my_task.deployment_id       = task['deployment-id']
+            my_task.quick_task_summary  = task['quick-task-summary']
+            my_task.parent_id           = task['parent_id']
+            my_task.form_name           = task_query['form-name']
+            my_task.creator             = task_query['taskData']['created-by']
+            my_task.owner               = task['actual-owner']
+            my_task.data                = task
             
-            my_task.process = OpenStruct.new
-            my_task.process.data = self.process_instance(task['process-instance-id'])
+            my_task.process               = OpenStruct.new
+            my_task.process.data          = self.process_instance(task['process-instance-id'])
             my_task.process.deployment_id = task['deployment-id']
-            my_task.process.id = my_task.process.data['process-id']
-            my_task.process.instance_id = my_task.process.data['process-instance-id']
-            my_task.process.start_on = my_task.process.data['start'].nil? ? Time.now : Time.at(my_task.process.data['start']/1000)
-            my_task.process.name = my_task.process.data['process-name']
-            my_task.process.version = my_task.process.data['process-version']
-            my_task.process.creator = my_task.process.data['identity']
-            my_task.process.variables = self.process_instance_variables(my_task.process.instance_id)
+            my_task.process.id            = my_task.process.data['process-id']
+            my_task.process.instance_id   = my_task.process.data['process-instance-id']
+            my_task.process.start_on      = my_task.process.data['start'].nil? ? Time.now : Time.at(my_task.process.data['start']/1000)
+            my_task.process.end_on        = my_task.process.data['end'].nil? ? nil : Time.at(my_task.process.data['end']/1000)
+            my_task.process.name          = my_task.process.data['process-name']
+            my_task.process.version       = my_task.process.data['process-version']
+            my_task.process.creator       = my_task.process.data['identity']
+            my_task.process.variables     = self.process_instance_variables(my_task.process.instance_id)
             tasks << my_task
           end
         end
