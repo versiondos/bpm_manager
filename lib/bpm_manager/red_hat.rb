@@ -204,8 +204,7 @@ module BpmManager
     
     # Private class methods
     def self.calculate_sla(start_time, end_time = Time.now, sla_hours = 0.0, offset = 20)
-      puts '---> End_time: ' + end_time.to_s
-      
+      end_time = Time.now   if end_time.nil?
       hours = sla_hours.to_f * 3600   # Converts to seconds and calculates warning offset
       warn = start_time.utc + hours * ((100.0 - offset) / 100)
       total = start_time.utc + hours
@@ -216,8 +215,7 @@ module BpmManager
     #private_class_method :calculate_sla
     
     def self.calculate_sla_percent(start_time, end_time = Time.now, sla_hours = 0.0, offset = 20)
-      puts '---> End_time: ' + end_time.to_s
-      
+      end_time = Time.now   if end_time.nil?
       sla_hours = sla_hours * 3600.0   # converts to seconds
       offset_pcg = (100.0 - offset) / 100.0
       percent = OpenStruct.new
