@@ -204,10 +204,10 @@ module BpmManager
     
     # Private class methods
     def self.calculate_sla(start_time, end_time = Time.now, sla_hours = 0.0, offset = 20)
-      end_time = Time.now   if end_time.nil?
-      hours = sla_hours.to_f * 3600   # Converts to seconds and calculates warning offset
-      warn = start_time.utc + hours * ((100.0 - offset) / 100)
-      total = start_time.utc + hours
+      end_time  = Time.now   if end_time.nil?
+      hours     = sla_hours.to_f * 3600   # Converts to seconds and calculates warning offset
+      warn      = start_time.utc + hours * ((100.0 - offset) / 100)
+      total     = start_time.utc + hours
       
       # Returns the status      
       end_time.utc <= warn ? 0 : ( warn < end_time.utc && end_time.utc <= total ? 1 : 2 )
@@ -215,12 +215,12 @@ module BpmManager
     #private_class_method :calculate_sla
     
     def self.calculate_sla_percent(start_time, end_time = Time.now, sla_hours = 0.0, offset = 20)
-      end_time = Time.now   if end_time.nil?
-      sla_hours = sla_hours * 3600.0   # converts to seconds
-      offset_pcg = (100.0 - offset) / 100.0
-      percent = OpenStruct.new
+      end_time    = Time.now   if end_time.nil?
+      sla_hours   = sla_hours * 3600.0   # converts to seconds
+      offset_pcg  = (100.0 - offset) / 100.0
+      percent     = OpenStruct.new
       
-      unless sla_hours < 1 # it's zero or negative
+      unless sla_hours < 0.01 # it's near zero or negative
         if end_time.utc > (start_time.utc + sla_hours) # Ruby Red
           total = (end_time.utc - start_time.utc).to_f
           percent.green  = (sla_hours * offset_pcg / total * 100).round(2)
