@@ -189,8 +189,6 @@ module BpmManager
       unless my_task.nil?
         sla = OpenStruct.new(:task => OpenStruct.new, :process => OpenStruct.new)
         
-        puts '-----> Ends on: ' + my_task.process.end_on.to_s
-        
         # Calculates the process sla
         sla.process.status = calculate_sla(my_task.process.start_on, my_task.process.end_on, process_sla_hours, warning_offset_percent)
         sla.process.status_name = (calculate_sla(my_task.process.start_on, my_task.process.end_on, process_sla_hours, warning_offset_percent) == 0) ? 'ok' : (calculate_sla(my_task.process.start_on, my_task.process.end_on, process_sla_hours, warning_offset_percent) == 1 ? 'warning' : 'due')
