@@ -1,4 +1,4 @@
-# BeatCoding BPM Manager Gem
+# Beatcoding BPM Manager Gem
 BPM Manager Gem for Red Hat jBPM
 
 Feel free to fork, contribute &amp; distribute
