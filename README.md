@@ -79,7 +79,7 @@ Oracle is only supported by a third-party REST API. The native API do not suppor
 
 ## Contributing
 
-1. Fork it ( https://github.com/BeatCoding/bpm_manager/fork )
+1. Fork it ( https://github.com/versiondos/bpm_manager/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
